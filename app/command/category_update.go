@@ -10,7 +10,7 @@ import (
 
 type CategoryUpdateCmd struct {
 	AdminUUID    string                            `json:"-"`
-	CategoryUUID string                            `json:"categoryUUID" param:"categoryUUID" validate:"required,object_id"`
+	CategoryUUID string                            `json:"-" params:"categoryUUID" validate:"required,object_id"`
 	MainUUID     string                            `json:"mainUUID"  validate:"omitempty,object_id"`
 	Images       []category.Image                  `json:"images" validate:"min=1,max=30,dive,required"`
 	Meta         map[category.Locale]category.Meta `json:"meta" validate:"required,dive"`

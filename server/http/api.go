@@ -19,7 +19,15 @@ func (h srv) CategoryCreate(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryUpdate(ctx *fiber.Ctx) error {
-	return nil
+	cmd := command.CategoryUpdateCmd{}
+	h.parseParams(ctx, &cmd)
+	h.parseBody(ctx, &cmd)
+	cmd.AdminUUID = current_user.Parse(ctx).UUID
+	res, err := h.app.Commands.CategoryUpdate(ctx.UserContext(), cmd)
+	if err != nil {
+		return result.Error(h.i18n.TranslateFromError(*err))
+	}
+	return result.SuccessDetail(Messages.Success.CategoryUpdated, res)
 }
 
 func (h srv) CategoryUpdateOrder(ctx *fiber.Ctx) error {
