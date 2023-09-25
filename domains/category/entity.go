@@ -1,38 +1,42 @@
 package category
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Entity struct {
 	UUID        string          `json:"uuid" bson:"_id,omitempty"`
-	MainUUID    string          `json:"mainUUID" bson:"main_uuid"`
-	Images      []Image         `json:"images" bson:"images"`
-	Meta        map[Locale]Meta `json:"meta" bson:"meta"`
-	InputGroups []InputGroup    `json:"inputGroups" bson:"input_groups"`
-	Inputs      []Input         `json:"inputs" bson:"inputs"`
-	Rules       []Rule          `json:"rules" bson:"rules"`
-	Alerts      []Alert         `json:"alerts" bson:"alerts"`
-	Validators  []string        `json:"validators" bson:"validators"`
-	Order       int             `json:"order" bson:"order"`
-	IsActive    bool            `json:"isActive" bson:"is_active"`
-	IsDeleted   bool            `json:"isDeleted" bson:"is_deleted"`
-	CreatedAt   time.Time       `json:"createdAt" bson:"created_at"`
-	UpdatedAt   time.Time       `json:"updatedAt" bson:"updated_at"`
+	MainUUID    string          `json:"mainUUID" bson:"main_uuid"  validate:"omitempty,object_id"`
+	Images      []Image         `json:"images" bson:"images"  validate:"min=1,max=30,dive,required"`
+	Meta        map[Locale]Meta `json:"meta" bson:"meta" validate:"required,dive"`
+	InputGroups []InputGroup    `json:"inputGroups" bson:"input_groups" validate:"required,dive"`
+	Inputs      []Input         `json:"inputs" bson:"inputs" validate:"required,dive"`
+	Rules       []Rule          `json:"rules" bson:"rules" validate:"required,dive"`
+	Alerts      []Alert         `json:"alerts" bson:"alerts" validate:"required,dive"`
+	Validators  []string        `json:"validators" bson:"validators" validate:"required,min=1"`
+	Order       int             `json:"order" bson:"order" validate:"required,min=0,max=100"`
+	IsActive    bool            `json:"isActive" bson:"is_active" validate:"required,boolean"`
+	IsDeleted   bool            `json:"isDeleted" bson:"is_deleted" validate:"required,boolean"`
+	CreatedAt   time.Time       `json:"createdAt" bson:"created_at" validate:"required"`
+	UpdatedAt   time.Time       `json:"updatedAt" bson:"updated_at" validate:"required"`
 }
 
 type Image struct {
-	Url   string `json:"url" bson:"url"`
-	Order int16  `json:"order" bson:"order"`
+	Url   string `json:"url" bson:"url" validate:"required,url"`
+	Order int16  `json:"order" bson:"order" validate:"required,min=0,max=20"`
 }
 
 type BaseTranslation struct {
-	Name        string `json:"name" bson:"name"`
-	Description string `json:"description" bson:"description"`
+	Name        string `json:"name" bson:"name" validate:"required,max=255,min=3"`
+	Description string `json:"description" bson:"description" validate:"required,max=255,min=3"`
 }
 
 type Rule struct {
 	UUID         string                     `json:"uuid" bson:"uuid"`
-	Translations map[Locale]BaseTranslation `json:"translations" bson:"translations"`
-	StrictLevel  int16                      `json:"strictLevel" bson:"strict_level"`
+	Translations map[Locale]BaseTranslation `json:"translations" bson:"translations" validate:"required,dive"`
+	StrictLevel  int16                      `json:"strictLevel" bson:"strict_level"  validate:"required,min=0,max=10"`
 }
 
 type Alert struct {
@@ -43,60 +47,59 @@ type Alert struct {
 
 type InputGroup struct {
 	UUID         string                     `json:"uuid" bson:"uuid"`
-	Icon         string                     `json:"icon" bson:"icon"`
-	Translations map[Locale]BaseTranslation `json:"translations" bson:"translations"`
+	Icon         string                     `json:"icon" bson:"icon" validate:"required,max=255,min=3"`
+	Translations map[Locale]BaseTranslation `json:"translations" bson:"translations" validate:"required,dive"`
 }
-
 type Input struct {
 	UUID         string                      `json:"uuid" bson:"uuid"`
 	GroupUUID    string                      `json:"groupUUID" bson:"group_uuid"`
-	Type         InputType                   `json:"type" bson:"type"`
-	Translations map[Locale]InputTranslation `json:"translations" bson:"translations"`
-	IsRequired   bool                        `json:"isRequired" bson:"is_required"`
-	IsMultiple   bool                        `json:"isMultiple" bson:"is_multiple"`
-	IsUnique     bool                        `json:"isUnique" bson:"is_unique"`
-	IsPayed      bool                        `json:"isPayed" bson:"is_payed"`
-	Extra        []InputExtra                `json:"extra" bson:"extra"`
-	Options      []string                    `json:"options" bson:"options"`
+	Type         InputType                   `json:"type" bson:"type"  validate:"required"`
+	Translations map[Locale]InputTranslation `json:"translations" bson:"translations" validate:"required,dive"`
+	IsRequired   bool                        `json:"isRequired" bson:"is_required"  validate:"required,boolean"`
+	IsMultiple   bool                        `json:"isMultiple" bson:"is_multiple"  validate:"required,boolean"`
+	IsUnique     bool                        `json:"isUnique" bson:"is_unique"  validate:"required,boolean"`
+	IsPayed      bool                        `json:"isPayed" bson:"is_payed"  validate:"required,boolean"`
+	Extra        []InputExtra                `json:"extra" bson:"extra"  validate:"required,dive"`
+	Options      []string                    `json:"options" bson:"options"  validate:"required,min=0"`
 }
 
 type InputExtra struct {
-	Name  string `json:"name" bson:"name"`
-	Value string `json:"value" bson:"value"`
+	Name  string `json:"name" bson:"name" validate:"required,max=255,min=1"`
+	Value string `json:"value" bson:"value" validate:"required,max=255,min=1"`
 }
 
 type InputTranslation struct {
-	Name        string `json:"name" bson:"name"`
-	Placeholder string `json:"placeholder" bson:"placeholder"`
-	Help        string `json:"help" bson:"help"`
+	Name        string `json:"name" bson:"name" validate:"required,max=255,min=3"`
+	Placeholder string `json:"placeholder" bson:"placeholder" validate:"required,max=255,min=3"`
+	Help        string `json:"help" bson:"help" validate:"required,max=255,min=3"`
 }
 
 type Meta struct {
-	Name        string `json:"name" bson:"name"`
-	Description string `json:"description" bson:"description"`
-	Title       string `json:"title" bson:"title"`
+	Name        string `json:"name" bson:"name" validate:"required,max=255,min=3"`
+	Description string `json:"description" bson:"description" validate:"required,max=255,min=5"`
+	Title       string `json:"title" bson:"title" validate:"required,max=100,min=5"`
 	Slug        string `json:"slug" bson:"slug"`
-	MarkdownURL string `json:"markdownURL" bson:"markdown_url"`
-	Seo         Seo
+	MarkdownURL string `json:"markdownURL" bson:"markdown_url" validate:"required,url"`
+	Seo         Seo    `json:"seo" bson:"seo"  validate:"required"`
 }
 
 type Seo struct {
-	Title       string     `json:"title" bson:"title"`
-	Description string     `json:"description" bson:"description"`
-	Keywords    string     `json:"keywords" bson:"keywords"`
-	Canonical   string     `json:"canonical" bson:"canonical"`
-	Extra       []SeoExtra `json:"extra" bson:"extra"`
+	Title       string     `json:"title" bson:"title" validate:"required,max=100,min=5"`
+	Description string     `json:"description" bson:"description" validate:"required,max=255,min=5"`
+	Keywords    string     `json:"keywords" bson:"keywords" validate:"required,max=255,min=5"`
+	Canonical   string     `json:"canonical" bson:"canonical" validate:"omitempty,url"`
+	Extra       []SeoExtra `json:"extra" bson:"extra" validate:"required"`
 }
 
 type SeoExtra struct {
-	Name       string         `json:"name" bson:"name"`
-	Content    string         `json:"content" bson:"content"`
-	Attributes []SeoAttribute `json:"attributes" bson:"attributes"`
+	Name       string         `json:"name" bson:"name" validate:"required,max=255,min=3"`
+	Content    string         `json:"content" bson:"content" validate:"required,max=255,min=3"`
+	Attributes []SeoAttribute `json:"attributes" bson:"attributes" validate:"required"`
 }
 
 type SeoAttribute struct {
-	Name  string `json:"name" bson:"name"`
-	Value string `json:"value" bson:"value"`
+	Name  string `json:"name" bson:"name" validate:"required,max=255,min=3"`
+	Value string `json:"value" bson:"value" validate:"required,max=255,min=3"`
 }
 
 type InputType string
@@ -186,4 +189,47 @@ func (e Entity) GetInput(uuid string) (Input, bool) {
 
 func (l Locale) String() string {
 	return string(l)
+}
+
+func (i Input) BeforeCreate() {
+	i.UUID = uuid.New().String()
+}
+
+func (i InputGroup) BeforeCreate() {
+	i.UUID = uuid.New().String()
+}
+
+func (a Alert) BeforeCreate() {
+	a.UUID = uuid.New().String()
+}
+
+func (r Rule) BeforeCreate() {
+	r.UUID = uuid.New().String()
+}
+
+func (e *Entity) BeforeCreate() {
+	e.IsActive = true
+	e.IsDeleted = false
+	e.CreatedAt = time.Now()
+	e.UpdatedAt = time.Now()
+
+	for i, v := range e.Inputs {
+		v.BeforeCreate()
+		e.Inputs[i] = v
+	}
+
+	for i, v := range e.InputGroups {
+		v.BeforeCreate()
+		e.InputGroups[i] = v
+	}
+
+	for i, v := range e.Alerts {
+		v.BeforeCreate()
+		e.Alerts[i] = v
+	}
+
+	for i, v := range e.Rules {
+		v.BeforeCreate()
+		e.Rules[i] = v
+	}
 }

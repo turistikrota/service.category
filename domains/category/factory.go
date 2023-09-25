@@ -12,7 +12,7 @@ type Factory struct {
 	Errors Errors
 }
 
-func newFactory() Factory {
+func NewFactory() Factory {
 	return Factory{
 		Errors: newCategoryErrors(),
 	}

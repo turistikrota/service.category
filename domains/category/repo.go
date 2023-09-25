@@ -39,9 +39,9 @@ type repo struct {
 	helper     mongo2.Helper[*Entity, *Entity]
 }
 
-func NewRepo(collection *mongo.Collection) Repository {
+func NewRepo(collection *mongo.Collection, factory Factory) Repository {
 	return &repo{
-		factory:    newFactory(),
+		factory:    factory,
 		collection: collection,
 		helper:     mongo2.NewHelper[*Entity, *Entity](collection, createEntity),
 	}
@@ -58,6 +58,7 @@ func validate(collection *mongo.Collection) {
 }
 
 func (r *repo) Create(ctx context.Context, e *Entity) (*Entity, *i18np.Error) {
+	e.BeforeCreate()
 	res, err := r.collection.InsertOne(ctx, e)
 	if err != nil {
 		return nil, r.factory.Errors.Failed("create")
