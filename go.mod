@@ -18,7 +18,6 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/mixarchitecture/i18np v0.0.0-20230331235711-ece4c5f1bb52 // indirect
 	github.com/montanaflynn/stats v0.7.0 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.2.1 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -30,4 +29,5 @@ require (
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.12.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
