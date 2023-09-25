@@ -26,6 +26,7 @@ import (
 )
 
 type srv struct {
+	config      config.App
 	app         app.Application
 	i18n        i18np.I18n
 	validator   validation.Validator
@@ -36,6 +37,7 @@ type srv struct {
 }
 
 type Config struct {
+	Env         config.App
 	App         app.Application
 	I18n        i18np.I18n
 	Validator   validation.Validator
@@ -47,6 +49,7 @@ type Config struct {
 
 func New(config Config) server.Server {
 	return srv{
+		config:      config.Env,
 		app:         config.App,
 		i18n:        config.I18n,
 		validator:   config.Validator,
@@ -57,7 +60,30 @@ func New(config Config) server.Server {
 	}
 }
 
-func (s srv) Listen() error {
+func (h srv) Listen() error {
+	http.RunServer(http.Config{
+		Host:        h.config.Server.Host,
+		Port:        h.config.Server.Port,
+		I18n:        &h.i18n,
+		AcceptLangs: []string{},
+		CreateHandler: func(router fiber.Router) fiber.Router {
+			router.Use(h.cors(), h.deviceUUID(), h.rateLimit())
+			admin := router.Group("/admin", h.currentUserAccess(), h.requiredAccess())
+			admin.Post("/", h.adminRoute(config.Roles.Category.Create), h.wrapWithTimeout(h.CategoryCreate))
+			admin.Get("/", h.adminRoute(config.Roles.Category.List), h.wrapWithTimeout(h.CategoryAdminList))
+			admin.Get("/:uuid/child", h.adminRoute(config.Roles.Category.ListChildren), h.wrapWithTimeout(h.CategoryAdminListChild))
+			admin.Put("/:uuid/enable", h.adminRoute(config.Roles.Category.Enable), h.wrapWithTimeout(h.CategoryEnable))
+			admin.Put("/:uuid/re-order", h.adminRoute(config.Roles.Category.ReOrder), h.wrapWithTimeout(h.CategoryUpdateOrder))
+			admin.Put("/:uuid/disable", h.adminRoute(config.Roles.Category.Disable), h.wrapWithTimeout(h.CategoryDisable))
+			admin.Put("/:uuid", h.adminRoute(config.Roles.Category.Update), h.wrapWithTimeout(h.CategoryUpdate))
+			admin.Get("/:uuid", h.adminRoute(config.Roles.Category.ViewAdmin), h.wrapWithTimeout(h.CategoryAdminView))
+			admin.Delete("/:uuid", h.adminRoute(config.Roles.Category.Delete), h.wrapWithTimeout(h.CategoryDelete))
+			router.Get("/", h.wrapWithTimeout(h.CategoryList))
+			router.Get("/:slug", h.wrapWithTimeout(h.CategoryView))
+			router.Get("/:uuid/child", h.wrapWithTimeout(h.CategoryListChild))
+			return router
+		},
+	})
 	return nil
 }
 
