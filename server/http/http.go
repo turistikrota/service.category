@@ -1,7 +1,6 @@
 package http
 
 import (
-	"context"
 	"time"
 
 	httpServer "github.com/turistikrota/service.shared/server/http"
@@ -30,7 +29,6 @@ type srv struct {
 	app         app.Application
 	i18n        i18np.I18n
 	validator   validation.Validator
-	ctx         context.Context
 	tknSrv      token.Service
 	sessionSrv  session.Service
 	httpHeaders config.HttpHeaders
@@ -41,7 +39,6 @@ type Config struct {
 	App         app.Application
 	I18n        i18np.I18n
 	Validator   validation.Validator
-	Context     context.Context
 	HttpHeaders config.HttpHeaders
 	TokenSrv    token.Service
 	SessionSrv  session.Service
@@ -53,7 +50,6 @@ func New(config Config) server.Server {
 		app:         config.App,
 		i18n:        config.I18n,
 		validator:   config.Validator,
-		ctx:         config.Context,
 		tknSrv:      config.TokenSrv,
 		sessionSrv:  config.SessionSrv,
 		httpHeaders: config.HttpHeaders,
