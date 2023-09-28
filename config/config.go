@@ -16,7 +16,7 @@ type I18n struct {
 	Locales  []string `env:"I18N_LOCALES" envDefault:"en,tr"`
 }
 
-type Server struct {
+type Http struct {
 	Host  string `env:"SERVER_HOST" envDefault:"localhost"`
 	Port  int    `env:"SERVER_PORT" envDefault:"3000"`
 	Group string `env:"SERVER_GROUP" envDefault:"account"`
@@ -53,6 +53,11 @@ type Session struct {
 	Topic string `env:"SESSION_TOPIC"`
 }
 
+type RSA struct {
+	PrivateKeyFile string `env:"RSA_PRIVATE_KEY"`
+	PublicKeyFile  string `env:"RSA_PUBLIC_KEY"`
+}
+
 type Topics struct {
 	Category CategoryEvents
 	Post     PostEvents
@@ -84,16 +89,16 @@ type CDN struct {
 }
 
 type App struct {
-	Protocol string `env:"PROTOCOL" envDefault:"http"`
-	DB       struct {
+	DB struct {
 		Category MongoCategory
 	}
-	Server      Server
+	Http        Http
 	HttpHeaders HttpHeaders
 	I18n        I18n
 	Topics      Topics
 	Session     Session
 	Nats        Nats
+	RSA         RSA
 	Redis       Redis
 	TokenSrv    TokenSrv
 	CacheRedis  CacheRedis
