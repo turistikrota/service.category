@@ -25,7 +25,7 @@ func (f Factory) IsZero() bool {
 type NewConfig struct {
 	MainUUID    string
 	Images      []Image
-	Meta        map[Locale]Meta
+	Meta        map[Locale]*Meta
 	InputGroups []InputGroup
 	Inputs      []Input
 	Rules       []Rule

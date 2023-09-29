@@ -68,6 +68,7 @@ func (r *repo) Create(ctx context.Context, e *Entity) (*Entity, *i18np.Error) {
 }
 
 func (r *repo) Update(ctx context.Context, e *Entity) *i18np.Error {
+	e.BeforeUpdate()
 	id, err := mongo2.TransformId(e.UUID)
 	if err != nil {
 		return r.factory.Errors.InvalidUUID("update")

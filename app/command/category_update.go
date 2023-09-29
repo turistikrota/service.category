@@ -9,17 +9,17 @@ import (
 )
 
 type CategoryUpdateCmd struct {
-	AdminUUID    string                            `json:"-"`
-	CategoryUUID string                            `json:"-" params:"categoryUUID" validate:"required,object_id"`
-	MainUUID     string                            `json:"mainUUID"  validate:"omitempty,object_id"`
-	Images       []category.Image                  `json:"images" validate:"min=1,max=30,dive,required"`
-	Meta         map[category.Locale]category.Meta `json:"meta" validate:"required,dive"`
-	InputGroups  []category.InputGroup             `json:"inputGroups" validate:"required,dive"`
-	Inputs       []category.Input                  `json:"inputs" bson:"inputs" validate:"required,dive"`
-	Rules        []category.Rule                   `json:"rules" bson:"rules" validate:"required,dive"`
-	Alerts       []category.Alert                  `json:"alerts" bson:"alerts" validate:"required,dive"`
-	Validators   []string                          `json:"validators" bson:"validators" validate:"required,min=1"`
-	Order        int                               `json:"order" bson:"order" validate:"required,min=0,max=100"`
+	AdminUUID    string                             `json:"-"`
+	CategoryUUID string                             `json:"-" params:"categoryUUID" validate:"required,object_id"`
+	MainUUID     string                             `json:"mainUUID"  validate:"omitempty,object_id"`
+	Images       []category.Image                   `json:"images" validate:"min=1,max=30,dive,required"`
+	Meta         map[category.Locale]*category.Meta `json:"meta" validate:"required,dive"`
+	InputGroups  []category.InputGroup              `json:"inputGroups" validate:"required,dive"`
+	Inputs       []category.Input                   `json:"inputs" bson:"inputs" validate:"required,dive"`
+	Rules        []category.Rule                    `json:"rules" bson:"rules" validate:"required,dive"`
+	Alerts       []category.Alert                   `json:"alerts" bson:"alerts" validate:"required,dive"`
+	Validators   []string                           `json:"validators" bson:"validators" validate:"required,min=1"`
+	Order        int                                `json:"order" bson:"order" validate:"required,min=0,max=100"`
 }
 
 type CategoryUpdateRes struct {
