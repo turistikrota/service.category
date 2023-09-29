@@ -196,12 +196,12 @@ func (e *Entity) BeforeCreate() {
 	e.IsDeleted = false
 	e.CreatedAt = time.Now()
 	e.UpdatedAt = time.Now()
-	e.Meta[LocaleEN].Slug = slug.New(e.Meta[LocaleEN].Name, slug.EN)
-	e.Meta[LocaleTR].Slug = slug.New(e.Meta[LocaleTR].Name, slug.TR)
+	e.Meta[LocaleEN].Slug = slug.New(e.Meta[LocaleEN].Title, slug.EN)
+	e.Meta[LocaleTR].Slug = slug.New(e.Meta[LocaleTR].Title, slug.TR)
 }
 
 func (e *Entity) BeforeUpdate() {
 	e.UpdatedAt = time.Now()
-	e.Meta[LocaleEN].Slug = slug.New(e.Meta[LocaleEN].Name, slug.EN)
-	e.Meta[LocaleTR].Slug = slug.New(e.Meta[LocaleTR].Name, slug.TR)
+	e.Meta[LocaleEN].Slug = slug.New(e.Meta[LocaleEN].Title, slug.EN)
+	e.Meta[LocaleTR].Slug = slug.New(e.Meta[LocaleTR].Title, slug.TR)
 }
