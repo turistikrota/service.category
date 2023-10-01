@@ -7,6 +7,7 @@ import (
 	"github.com/cilloparch/cillop/cqrs"
 	"github.com/cilloparch/cillop/helpers/cache"
 	"github.com/cilloparch/cillop/i18np"
+	"github.com/turistikrota/service.category/config"
 	"github.com/turistikrota/service.category/domains/category"
 )
 
@@ -17,11 +18,12 @@ type CategoryFindBySlugQuery struct {
 
 type CategoryFindBySlugResult struct {
 	*category.Entity
+	MarkdownURL string `json:"markdownURL"`
 }
 
 type CategoryFindBySlugHandler cqrs.HandlerFunc[CategoryFindBySlugQuery, *CategoryFindBySlugResult]
 
-func NewCategoryFindBySlugHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindBySlugHandler {
+func NewCategoryFindBySlugHandler(repo category.Repository, cacheSrv cache.Service, cnf config.App) CategoryFindBySlugHandler {
 	cache := cache.New[*category.Entity](cacheSrv)
 
 	createCacheEntity := func() *category.Entity {
@@ -40,7 +42,8 @@ func NewCategoryFindBySlugHandler(repo category.Repository, cacheSrv cache.Servi
 			return nil, err
 		}
 		return &CategoryFindBySlugResult{
-			Entity: res,
+			Entity:      res,
+			MarkdownURL: dressCdnMarkdown(cnf, res.UUID),
 		}, nil
 	}
 }

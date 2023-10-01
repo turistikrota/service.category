@@ -79,7 +79,6 @@ type Meta struct {
 	Description string `json:"description" bson:"description" validate:"required,max=255,min=5"`
 	Title       string `json:"title" bson:"title" validate:"required,max=100,min=5"`
 	Slug        string `json:"slug" bson:"slug"`
-	MarkdownURL string `json:"markdownURL" bson:"markdown_url" validate:"required,url"`
 	Seo         Seo    `json:"seo" bson:"seo"  validate:"required"`
 }
 
