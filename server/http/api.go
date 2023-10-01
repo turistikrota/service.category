@@ -134,7 +134,7 @@ func (h srv) CategoryAdminListChild(ctx *fiber.Ctx) error {
 
 func (h srv) CategoryAdminListParents(ctx *fiber.Ctx) error {
 	query := query.CategoryAdminFindParentsQuery{}
-	h.parseParams(ctx, &query)
+	h.parseQuery(ctx, &query)
 	res, err := h.app.Queries.CategoryAdminFindParents(ctx.UserContext(), query)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))

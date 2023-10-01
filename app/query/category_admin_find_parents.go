@@ -11,7 +11,7 @@ import (
 )
 
 type CategoryAdminFindParentsQuery struct {
-	MainUUIDs []string `json:"mainUUIDs" param:"mainUUIDs" validate:"required,dive,object_id,min=1,max=10"`
+	MainUUIDs []string `json:"mainUUIDs" param:"mainUUIDs" query:"mainUUIDs" validate:"required,min=1,max=10,dive,object_id"`
 }
 
 type CategoryAdminFindParentsResult struct {
