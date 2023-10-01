@@ -10,7 +10,7 @@ import (
 
 type CategoryCreateCmd struct {
 	AdminUUID   string                             `json:"-"`
-	MainUUID    string                             `json:"mainUUID"  validate:"omitempty,object_id"`
+	MainUUIDs   []string                           `json:"mainUUID"  validate:"required,dive,object_id"`
 	Images      []category.Image                   `json:"images" validate:"min=1,max=30,dive,required"`
 	Meta        map[category.Locale]*category.Meta `json:"meta" validate:"required,dive"`
 	InputGroups []category.InputGroup              `json:"inputGroups" validate:"required,dive"`
@@ -30,7 +30,7 @@ type CategoryCreateHandler cqrs.HandlerFunc[CategoryCreateCmd, *CategoryCreateRe
 func NewCategoryCreateHandler(factory category.Factory, repo category.Repository, events category.Events) CategoryCreateHandler {
 	return func(ctx context.Context, cmd CategoryCreateCmd) (*CategoryCreateRes, *i18np.Error) {
 		e := factory.New(category.NewConfig{
-			MainUUID:    cmd.MainUUID,
+			MainUUIDs:   cmd.MainUUIDs,
 			Meta:        cmd.Meta,
 			Images:      cmd.Images,
 			Inputs:      cmd.Inputs,

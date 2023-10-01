@@ -40,12 +40,13 @@ func NewApplication(cnf Config) app.Application {
 			CategoryValidatePost: command.NewCategoryValidatePostHandler(categoryFactory, categoryRepo, categoryValidators, categoryEvents),
 		},
 		Queries: app.Queries{
-			CategoryFind:           query.NewCategoryFindHandler(categoryRepo, cnf.CacheSrv, cnf.App),
-			CategoryFindBySlug:     query.NewCategoryFindBySlugHandler(categoryRepo, cnf.CacheSrv, cnf.App),
-			CategoryFindChild:      query.NewCategoryFindChildHandler(categoryRepo, cnf.CacheSrv),
-			CategoryFindAll:        query.NewCategoryFindAllHandler(categoryRepo, cnf.CacheSrv),
-			CategoryAdminFindChild: query.NewCategoryAdminFindChildHandler(categoryRepo, cnf.CacheSrv),
-			CategoryAdminFindAll:   query.NewCategoryAdminFindAllHandler(categoryRepo, cnf.CacheSrv),
+			CategoryFind:             query.NewCategoryFindHandler(categoryRepo, cnf.CacheSrv, cnf.App),
+			CategoryFindBySlug:       query.NewCategoryFindBySlugHandler(categoryRepo, cnf.CacheSrv, cnf.App),
+			CategoryFindChild:        query.NewCategoryFindChildHandler(categoryRepo, cnf.CacheSrv),
+			CategoryFindAll:          query.NewCategoryFindAllHandler(categoryRepo, cnf.CacheSrv),
+			CategoryAdminFindChild:   query.NewCategoryAdminFindChildHandler(categoryRepo, cnf.CacheSrv),
+			CategoryAdminFindParents: query.NewCategoryAdminFindParentsHandler(categoryRepo, cnf.CacheSrv),
+			CategoryAdminFindAll:     query.NewCategoryAdminFindAllHandler(categoryRepo, cnf.CacheSrv),
 		},
 	}
 }
