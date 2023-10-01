@@ -10,7 +10,7 @@ import (
 
 type CategoryCreateCmd struct {
 	AdminUUID   string                             `json:"-"`
-	MainUUIDs   []string                           `json:"mainUUID"  validate:"required,dive,object_id"`
+	MainUUIDs   []string                           `json:"mainUUIDs"  validate:"required,dive,object_id"`
 	Images      []category.Image                   `json:"images" validate:"min=1,max=30,dive,required"`
 	Meta        map[category.Locale]*category.Meta `json:"meta" validate:"required,dive"`
 	InputGroups []category.InputGroup              `json:"inputGroups" validate:"required,dive"`
