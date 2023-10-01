@@ -15,21 +15,29 @@ type CategoryFindChildQuery struct {
 }
 
 type CategoryFindChildResult struct {
-	List []*category.Entity `json:"list"`
+	List []*category.ListDto `json:"list"`
 }
 
 type CategoryFindChildHandler cqrs.HandlerFunc[CategoryFindChildQuery, *CategoryFindChildResult]
 
 func NewCategoryFindChildHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindChildHandler {
-	cache := cache.New[[]*category.Entity](cacheSrv)
+	cache := cache.New[[]*category.ListDto](cacheSrv)
 
-	createCacheEntity := func() []*category.Entity {
-		return []*category.Entity{}
+	createCacheEntity := func() []*category.ListDto {
+		return []*category.ListDto{}
 	}
 
 	return func(ctx context.Context, query CategoryFindChildQuery) (*CategoryFindChildResult, *i18np.Error) {
-		cacheHandler := func() ([]*category.Entity, *i18np.Error) {
-			return repo.FindChild(ctx, query.MainUUID)
+		cacheHandler := func() ([]*category.ListDto, *i18np.Error) {
+			res, err := repo.FindChild(ctx, query.MainUUID)
+			if err != nil {
+				return nil, err
+			}
+			list := make([]*category.ListDto, len(res))
+			for i, v := range res {
+				list[i] = v.ToList()
+			}
+			return list, nil
 		}
 		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_child_%v", query.MainUUID))
 		if err != nil {

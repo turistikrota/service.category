@@ -13,21 +13,29 @@ import (
 type CategoryFindAllQuery struct{}
 
 type CategoryFindAllResult struct {
-	List []*category.Entity `json:"list"`
+	List []*category.ListDto `json:"list"`
 }
 
 type CategoryFindAllHandler cqrs.HandlerFunc[CategoryFindAllQuery, *CategoryFindAllResult]
 
 func NewCategoryFindAllHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindAllHandler {
-	cache := cache.New[[]*category.Entity](cacheSrv)
+	cache := cache.New[[]*category.ListDto](cacheSrv)
 
-	createCacheEntity := func() []*category.Entity {
-		return []*category.Entity{}
+	createCacheEntity := func() []*category.ListDto {
+		return []*category.ListDto{}
 	}
 
 	return func(ctx context.Context, query CategoryFindAllQuery) (*CategoryFindAllResult, *i18np.Error) {
-		cacheHandler := func() ([]*category.Entity, *i18np.Error) {
-			return repo.FindAll(ctx)
+		cacheHandler := func() ([]*category.ListDto, *i18np.Error) {
+			res, err := repo.FindAll(ctx)
+			if err != nil {
+				return nil, err
+			}
+			list := make([]*category.ListDto, len(res))
+			for i, v := range res {
+				list[i] = v.ToList()
+			}
+			return list, nil
 		}
 		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_all"))
 		if err != nil {

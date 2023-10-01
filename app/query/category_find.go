@@ -16,7 +16,7 @@ type CategoryFindQuery struct {
 }
 
 type CategoryFindResult struct {
-	*category.Entity
+	*category.AdminDetailDto
 	MarkdownURL string `json:"markdownURL"`
 }
 
@@ -38,8 +38,8 @@ func NewCategoryFindHandler(repo category.Repository, cacheSrv cache.Service, cn
 			return nil, err
 		}
 		return &CategoryFindResult{
-			Entity:      res,
-			MarkdownURL: dressCdnMarkdown(cnf, res.UUID),
+			AdminDetailDto: res.ToAdminDetail(),
+			MarkdownURL:    dressCdnMarkdown(cnf, res.UUID),
 		}, nil
 	}
 }
