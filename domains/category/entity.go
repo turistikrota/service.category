@@ -8,7 +8,7 @@ import (
 
 type Entity struct {
 	UUID        string           `json:"uuid" bson:"_id,omitempty"`
-	MainUUID    string           `json:"mainUUID" bson:"main_uuid"  validate:"omitempty,object_id"`
+	MainUUIDs   []string         `json:"mainUUIDs" bson:"main_uuids"  validate:"omitempty,dive,object_id"`
 	Images      []Image          `json:"images" bson:"images"  validate:"min=1,max=30,dive,required"`
 	Meta        map[Locale]*Meta `json:"meta" bson:"meta" validate:"required,dive"`
 	InputGroups []InputGroup     `json:"inputGroups" bson:"input_groups" validate:"required,dive"`
@@ -134,7 +134,7 @@ const (
 )
 
 func (e *Entity) IsMain() bool {
-	return e.MainUUID == ""
+	return len(e.MainUUIDs) == 0
 }
 
 func (e *Entity) HasValidator(name string) bool {

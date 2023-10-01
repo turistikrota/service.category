@@ -2,7 +2,7 @@ package category
 
 type fieldsType struct {
 	UUID        string
-	MainUUID    string
+	MainUUIDs   string
 	Images      string
 	Meta        string
 	Inputs      string
@@ -102,7 +102,7 @@ type seoAttributesFieldsType struct {
 
 var fields = fieldsType{
 	UUID:        "_id",
-	MainUUID:    "main_uuid",
+	MainUUIDs:   "main_uuids",
 	Images:      "images",
 	Meta:        "meta",
 	Inputs:      "inputs",

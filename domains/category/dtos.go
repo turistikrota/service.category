@@ -3,15 +3,15 @@ package category
 import "time"
 
 type ListDto struct {
-	UUID     string                  `json:"uuid" bson:"_id,omitempty"`
-	MainUUID string                  `json:"mainUUID" bson:"main_uuid"`
-	Images   []Image                 `json:"images" bson:"images"`
-	Meta     map[Locale]*MetaListDto `json:"meta" bson:"meta"`
+	UUID      string                  `json:"uuid" bson:"_id,omitempty"`
+	MainUUIDs []string                `json:"mainUUIDs" bson:"main_uuids"`
+	Images    []Image                 `json:"images" bson:"images"`
+	Meta      map[Locale]*MetaListDto `json:"meta" bson:"meta"`
 }
 
 type DetailDto struct {
 	UUID      string           `json:"uuid" bson:"_id,omitempty"`
-	MainUUID  string           `json:"mainUUID" bson:"main_uuid"`
+	MainUUIDs []string         `json:"mainUUIDs" bson:"main_uuids"`
 	Images    []Image          `json:"images" bson:"images"`
 	Meta      map[Locale]*Meta `json:"meta" bson:"meta"`
 	CreatedAt time.Time        `json:"createdAt" bson:"created_at"`
@@ -23,7 +23,7 @@ type AdminDetailDto struct {
 
 type AdminListDto struct {
 	UUID      string                  `json:"uuid" bson:"_id,omitempty"`
-	MainUUID  string                  `json:"mainUUID" bson:"main_uuid"`
+	MainUUIDs []string                `json:"mainUUIDs" bson:"main_uuids"`
 	Images    []Image                 `json:"images" bson:"images"`
 	Meta      map[Locale]*MetaListDto `json:"meta" bson:"meta"`
 	IsActive  bool                    `json:"isActive" bson:"is_active"`
@@ -40,17 +40,17 @@ type MetaListDto struct {
 
 func (e *Entity) ToList() *ListDto {
 	return &ListDto{
-		UUID:     e.UUID,
-		MainUUID: e.MainUUID,
-		Images:   e.Images,
-		Meta:     e.ToMetaList(),
+		UUID:      e.UUID,
+		MainUUIDs: e.MainUUIDs,
+		Images:    e.Images,
+		Meta:      e.ToMetaList(),
 	}
 }
 
 func (e *Entity) ToDetail() *DetailDto {
 	return &DetailDto{
 		UUID:      e.UUID,
-		MainUUID:  e.MainUUID,
+		MainUUIDs: e.MainUUIDs,
 		Images:    e.Images,
 		Meta:      e.Meta,
 		CreatedAt: e.CreatedAt,
@@ -66,7 +66,7 @@ func (e *Entity) ToAdminDetail() *AdminDetailDto {
 func (e *Entity) ToAdminList() *AdminListDto {
 	return &AdminListDto{
 		UUID:      e.UUID,
-		MainUUID:  e.MainUUID,
+		MainUUIDs: e.MainUUIDs,
 		Images:    e.Images,
 		Meta:      e.ToMetaList(),
 		IsActive:  e.IsActive,

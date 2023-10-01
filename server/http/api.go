@@ -131,3 +131,13 @@ func (h srv) CategoryAdminListChild(ctx *fiber.Ctx) error {
 	}
 	return result.SuccessDetail(Messages.Success.CategoryListChild, res)
 }
+
+func (h srv) CategoryAdminListParents(ctx *fiber.Ctx) error {
+	query := query.CategoryAdminFindParentsQuery{}
+	h.parseQuery(ctx, &query)
+	res, err := h.app.Queries.CategoryAdminFindParents(ctx.UserContext(), query)
+	if err != nil {
+		return result.Error(h.i18n.TranslateFromError(*err))
+	}
+	return result.SuccessDetail(Messages.Success.CategoryListChild, res)
+}

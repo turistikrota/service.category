@@ -65,15 +65,19 @@ func loadCategories(ctx context.Context, repo category.Repository, categoryUUIDs
 }
 
 func validateCategoryChain(ctx context.Context, factory category.Factory, categories []*category.Entity) (int, *i18np.Error) {
-	len := len(categories)
-	for i := 0; i < len; i++ {
-		if i == 0 {
-			if categories[i].MainUUID != "" {
-				return i, factory.Errors.ParentUUIDIsNotEmpty()
+	length := len(categories)
+	for i := length - 1; i >= 0; i-- {
+		category := categories[i]
+		if category.IsMain() {
+			if i != 0 {
+				return i, factory.Errors.CategoryUUIDsIsNotCorrect()
 			}
 		} else {
-			if categories[i].MainUUID != categories[i-1].UUID {
-				return i, factory.Errors.ParentUUIDIsNotCorrect()
+			if i == 0 {
+				return i, factory.Errors.CategoryUUIDsIsNotCorrect()
+			}
+			if category.MainUUIDs[0] != categories[i-1].UUID {
+				return i, factory.Errors.CategoryUUIDsIsNotCorrect()
 			}
 		}
 	}

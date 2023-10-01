@@ -78,7 +78,7 @@ func (r *repo) Update(ctx context.Context, e *Entity) *i18np.Error {
 	}
 	update := bson.M{
 		"$set": bson.M{
-			fields.MainUUID:    e.MainUUID,
+			fields.MainUUIDs:   e.MainUUIDs,
 			fields.Images:      e.Images,
 			fields.Meta:        e.Meta,
 			fields.InputGroups: e.InputGroups,
@@ -167,7 +167,9 @@ func (r *repo) Enable(ctx context.Context, categoryUUID string) *i18np.Error {
 
 func (r *repo) FindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
-		fields.MainUUID: categoryUUID,
+		fields.MainUUIDs: bson.M{
+			"$in": []string{categoryUUID},
+		},
 		fields.IsDeleted: bson.M{
 			"$ne": true,
 		},
@@ -178,7 +180,9 @@ func (r *repo) FindChild(ctx context.Context, categoryUUID string) ([]*Entity, *
 
 func (r *repo) AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
-		fields.MainUUID: categoryUUID,
+		fields.MainUUIDs: bson.M{
+			"$in": []string{categoryUUID},
+		},
 	}
 	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
 }
@@ -221,7 +225,9 @@ func (r *repo) FindBySlug(ctx context.Context, i18n I18nDetail) (*Entity, *i18np
 
 func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
-		fields.MainUUID: "",
+		fields.MainUUIDs: bson.M{
+			"$size": 0,
+		},
 		fields.IsDeleted: bson.M{
 			"$ne": true,
 		},
@@ -232,7 +238,9 @@ func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
 
 func (r *repo) AdminFindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
-		fields.MainUUID: "",
+		fields.MainUUIDs: bson.M{
+			"$size": 0,
+		},
 	}
 	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
 }
@@ -254,11 +262,24 @@ func (r *repo) FindByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Enti
 	return r.helper.GetListFilter(ctx, filter, r.listOptions())
 }
 
+func (r *repo) AdminFindByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error) {
+	ids, err := mongo2.TransformIds(categoryUUIDs)
+	if err != nil {
+		return nil, r.factory.Errors.InvalidUUID("find by uuids")
+	}
+	filter := bson.M{
+		fields.UUID: bson.M{
+			"$in": ids,
+		},
+	}
+	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
+}
+
 func (r *repo) adminListOptions() *options.FindOptions {
 	opts := &options.FindOptions{}
 	opts.SetProjection(bson.M{
 		fields.UUID:      1,
-		fields.MainUUID:  1,
+		fields.MainUUIDs: 1,
 		fields.Images:    1,
 		fields.Meta:      1,
 		fields.IsActive:  1,
@@ -271,10 +292,10 @@ func (r *repo) adminListOptions() *options.FindOptions {
 func (r *repo) listOptions() *options.FindOptions {
 	opts := &options.FindOptions{}
 	opts.SetProjection(bson.M{
-		fields.UUID:     1,
-		fields.MainUUID: 1,
-		fields.Images:   1,
-		fields.Meta:     1,
+		fields.UUID:      1,
+		fields.MainUUIDs: 1,
+		fields.Images:    1,
+		fields.Meta:      1,
 	})
 	opts.SetSort(bson.M{
 		fields.Order: 1,
@@ -286,7 +307,7 @@ func (r *repo) viewOptions() *options.FindOneOptions {
 	opts := &options.FindOneOptions{}
 	opts.SetProjection(bson.M{
 		fields.UUID:      1,
-		fields.MainUUID:  1,
+		fields.MainUUIDs: 1,
 		fields.Images:    1,
 		fields.Meta:      1,
 		fields.CreatedAt: 1,
