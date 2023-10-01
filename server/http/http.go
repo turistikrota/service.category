@@ -1,6 +1,7 @@
 package http
 
 import (
+	"strings"
 	"time"
 
 	httpServer "github.com/turistikrota/service.shared/server/http"
@@ -148,6 +149,15 @@ func (h srv) cors() fiber.Handler {
 		AllowMethods:     h.httpHeaders.AllowedMethods,
 		AllowHeaders:     h.httpHeaders.AllowedHeaders,
 		AllowCredentials: h.httpHeaders.AllowCredentials,
+		AllowOriginsFunc: func(origin string) bool {
+			origins := strings.Split(h.httpHeaders.AllowedOrigins, ",")
+			for _, o := range origins {
+				if strings.Contains(origin, o) {
+					return true
+				}
+			}
+			return false
+		},
 	})
 }
 
