@@ -13,21 +13,29 @@ import (
 type CategoryAdminFindAllQuery struct{}
 
 type CategoryAdminFindAllResult struct {
-	List []*category.Entity `json:"list"`
+	List []*category.AdminListDto `json:"list"`
 }
 
 type CategoryAdminFindAllHandler cqrs.HandlerFunc[CategoryAdminFindAllQuery, *CategoryAdminFindAllResult]
 
 func NewCategoryAdminFindAllHandler(repo category.Repository, cacheSrv cache.Service) CategoryAdminFindAllHandler {
-	cache := cache.New[[]*category.Entity](cacheSrv)
+	cache := cache.New[[]*category.AdminListDto](cacheSrv)
 
-	createCacheEntity := func() []*category.Entity {
-		return []*category.Entity{}
+	createCacheEntity := func() []*category.AdminListDto {
+		return []*category.AdminListDto{}
 	}
 
 	return func(ctx context.Context, query CategoryAdminFindAllQuery) (*CategoryAdminFindAllResult, *i18np.Error) {
-		cacheHandler := func() ([]*category.Entity, *i18np.Error) {
-			return repo.AdminFindAll(ctx)
+		cacheHandler := func() ([]*category.AdminListDto, *i18np.Error) {
+			res, err := repo.AdminFindAll(ctx)
+			if err != nil {
+				return nil, err
+			}
+			list := make([]*category.AdminListDto, len(res))
+			for i, v := range res {
+				list[i] = v.ToAdminList()
+			}
+			return list, nil
 		}
 		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_admin_find_all"))
 		if err != nil {

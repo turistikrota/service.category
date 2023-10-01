@@ -17,32 +17,36 @@ type CategoryFindBySlugQuery struct {
 }
 
 type CategoryFindBySlugResult struct {
-	*category.Entity
+	*category.DetailDto
 	MarkdownURL string `json:"markdownURL"`
 }
 
 type CategoryFindBySlugHandler cqrs.HandlerFunc[CategoryFindBySlugQuery, *CategoryFindBySlugResult]
 
 func NewCategoryFindBySlugHandler(repo category.Repository, cacheSrv cache.Service, cnf config.App) CategoryFindBySlugHandler {
-	cache := cache.New[*category.Entity](cacheSrv)
+	cache := cache.New[*category.DetailDto](cacheSrv)
 
-	createCacheEntity := func() *category.Entity {
-		return &category.Entity{}
+	createCacheEntity := func() *category.DetailDto {
+		return &category.DetailDto{}
 	}
 
 	return func(ctx context.Context, query CategoryFindBySlugQuery) (*CategoryFindBySlugResult, *i18np.Error) {
-		cacheHandler := func() (*category.Entity, *i18np.Error) {
-			return repo.FindBySlug(ctx, category.I18nDetail{
+		cacheHandler := func() (*category.DetailDto, *i18np.Error) {
+			res, err := repo.FindBySlug(ctx, category.I18nDetail{
 				Locale: query.Locale,
 				Slug:   query.Slug,
 			})
+			if err != nil {
+				return nil, err
+			}
+			return res.ToDetail(), nil
 		}
 		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_%v_%v", query.Locale, query.Slug))
 		if err != nil {
 			return nil, err
 		}
 		return &CategoryFindBySlugResult{
-			Entity:      res,
+			DetailDto:   res,
 			MarkdownURL: dressCdnMarkdown(cnf, res.UUID),
 		}, nil
 	}
