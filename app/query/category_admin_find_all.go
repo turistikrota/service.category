@@ -10,7 +10,9 @@ import (
 	"github.com/turistikrota/service.category/domains/category"
 )
 
-type CategoryAdminFindAllQuery struct{}
+type CategoryAdminFindAllQuery struct {
+	OnlyMains bool `query:"only_mains"`
+}
 
 type CategoryAdminFindAllResult struct {
 	List []*category.AdminListDto `json:"list"`
@@ -27,7 +29,7 @@ func NewCategoryAdminFindAllHandler(repo category.Repository, cacheSrv cache.Ser
 
 	return func(ctx context.Context, query CategoryAdminFindAllQuery) (*CategoryAdminFindAllResult, *i18np.Error) {
 		cacheHandler := func() ([]*category.AdminListDto, *i18np.Error) {
-			res, err := repo.AdminFindAll(ctx)
+			res, err := repo.AdminFindAll(ctx, query.OnlyMains)
 			if err != nil {
 				return nil, err
 			}

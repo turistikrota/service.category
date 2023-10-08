@@ -26,7 +26,7 @@ type Repository interface {
 	FindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	Find(ctx context.Context, categoryUUID string) (*Entity, *i18np.Error)
 	FindAll(ctx context.Context) ([]*Entity, *i18np.Error)
-	AdminFindAll(ctx context.Context) ([]*Entity, *i18np.Error)
+	AdminFindAll(ctx context.Context, onlyMains bool) ([]*Entity, *i18np.Error)
 	AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	UpdateOrder(ctx context.Context, categoryUUID string, order int16) *i18np.Error
 	FindBySlug(ctx context.Context, i18n I18nDetail) (*Entity, *i18np.Error)
@@ -236,8 +236,13 @@ func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
 	return r.helper.GetListFilter(ctx, filter, r.listOptions())
 }
 
-func (r *repo) AdminFindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
+func (r *repo) AdminFindAll(ctx context.Context, onlyMains bool) ([]*Entity, *i18np.Error) {
 	filter := bson.M{}
+	if onlyMains {
+		filter[fields.MainUUIDs] = bson.M{
+			"$size": 0,
+		}
+	}
 	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
 }
 
