@@ -39,7 +39,7 @@ func NewCategoryAdminFindAllHandler(repo category.Repository, cacheSrv cache.Ser
 			}
 			return list, nil
 		}
-		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_admin_find_all"))
+		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_admin_find_all_%v", query.OnlyMains))
 		if err != nil {
 			return nil, err
 		}
