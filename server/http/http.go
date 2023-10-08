@@ -115,7 +115,7 @@ func (h srv) currentUserAccess() fiber.Handler {
 func (h srv) rateLimit() fiber.Handler {
 	return limiter.New(limiter.Config{
 		Max:        50,
-		Expiration: 5 * time.Minute,
+		Expiration: 1 * time.Minute,
 	})
 }
 
