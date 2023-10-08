@@ -10,7 +10,7 @@ import (
 
 type CategoryEnableCmd struct {
 	AdminUUID    string `json:"-"`
-	CategoryUUID string `json:"categoryUUID" param:"categoryUUID" validate:"required,object_id"`
+	CategoryUUID string `json:"uuid" params:"uuid" validate:"required,object_id"`
 }
 
 type CategoryEnableRes struct {

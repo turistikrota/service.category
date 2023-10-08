@@ -11,7 +11,7 @@ import (
 )
 
 type CategoryFindChildQuery struct {
-	MainUUID string `json:"mainUUID" param:"mainUUID" validate:"required,object_id"`
+	MainUUID string `json:"uuid" params:"uuid" validate:"required,object_id"`
 }
 
 type CategoryFindChildResult struct {

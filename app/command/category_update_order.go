@@ -10,7 +10,7 @@ import (
 
 type CategoryUpdateOrderCmd struct {
 	AdminUUID    string `json:"-"`
-	CategoryUUID string `json:"-" param:"categoryUUID" validate:"required,object_id"`
+	CategoryUUID string `json:"-" params:"uuid" validate:"required,object_id"`
 	Order        int16  `json:"order" bson:"order" validate:"required,min=0,max=100"`
 }
 
