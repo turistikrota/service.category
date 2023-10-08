@@ -23,7 +23,8 @@ func (f Factory) IsZero() bool {
 }
 
 type NewConfig struct {
-	MainUUIDs    []string
+	MainUUID    string
+	MainUUIDs   []string
 	Images      []Image
 	Meta        map[Locale]*Meta
 	InputGroups []InputGroup
@@ -37,7 +38,8 @@ type NewConfig struct {
 func (f Factory) New(cnf NewConfig) *Entity {
 	t := time.Now()
 	return &Entity{
-		MainUUIDs:    cnf.MainUUIDs,
+		MainUUID:   cnf.MainUUID,
+		MainUUIDs:   cnf.MainUUIDs,
 		Meta:        cnf.Meta,
 		Images:      cnf.Images,
 		InputGroups: cnf.InputGroups,

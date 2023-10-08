@@ -180,9 +180,7 @@ func (r *repo) FindChild(ctx context.Context, categoryUUID string) ([]*Entity, *
 
 func (r *repo) AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
-		fields.MainUUIDs: bson.M{
-			"$in": []string{categoryUUID},
-		},
+		fields.MainUUID: categoryUUID,
 	}
 	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
 }
