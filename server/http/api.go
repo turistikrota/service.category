@@ -115,7 +115,9 @@ func (h srv) CategoryListChild(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryAdminList(ctx *fiber.Ctx) error {
-	res, err := h.app.Queries.CategoryAdminFindAll(ctx.UserContext(), query.CategoryAdminFindAllQuery{})
+	q := query.CategoryAdminFindAllQuery{}
+	h.parseQuery(ctx, &q)
+	res, err := h.app.Queries.CategoryAdminFindAll(ctx.UserContext(), q)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}
