@@ -11,6 +11,7 @@ import (
 type CategoryUpdateCmd struct {
 	AdminUUID    string                             `json:"-"`
 	CategoryUUID string                             `json:"-" params:"uuid" validate:"required,object_id"`
+	MainUUID     string                             `json:"mainUUID" validate:"omitempty,object_id"`
 	MainUUIDs    []string                           `json:"mainUUIDs"  validate:"required,dive,object_id"`
 	Images       []category.Image                   `json:"images" validate:"min=1,max=30,dive,required"`
 	Meta         map[category.Locale]*category.Meta `json:"meta" validate:"required,dive"`
@@ -30,6 +31,7 @@ type CategoryUpdateHandler cqrs.HandlerFunc[CategoryUpdateCmd, *CategoryUpdateRe
 func NewCategoryUpdateHandler(factory category.Factory, repo category.Repository, events category.Events) CategoryUpdateHandler {
 	return func(ctx context.Context, cmd CategoryUpdateCmd) (*CategoryUpdateRes, *i18np.Error) {
 		e := factory.New(category.NewConfig{
+			MainUUID:    cmd.MainUUID,
 			MainUUIDs:   cmd.MainUUIDs,
 			Meta:        cmd.Meta,
 			Images:      cmd.Images,

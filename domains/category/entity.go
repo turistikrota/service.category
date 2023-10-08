@@ -8,6 +8,7 @@ import (
 
 type Entity struct {
 	UUID        string           `json:"uuid" bson:"_id,omitempty"`
+	MainUUID    string           `json:"mainUUID" bson:"main_uuid,omitempty"  validate:"omitempty,object_id"`
 	MainUUIDs   []string         `json:"mainUUIDs" bson:"main_uuids"  validate:"omitempty,dive,object_id"`
 	Images      []Image          `json:"images" bson:"images"  validate:"min=1,max=30,dive,required"`
 	Meta        map[Locale]*Meta `json:"meta" bson:"meta" validate:"required,dive"`
