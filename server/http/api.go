@@ -20,8 +20,10 @@ func (h srv) CategoryCreate(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryUpdate(ctx *fiber.Ctx) error {
+	detail := command.CategoryDetailCmd{}
+	h.parseParams(ctx, &detail)
 	cmd := command.CategoryUpdateCmd{}
-	h.parseParams(ctx, &cmd)
+	cmd.CategoryUUID = detail.CategoryUUID
 	h.parseBody(ctx, &cmd)
 	cmd.AdminUUID = current_user.Parse(ctx).UUID
 	res, err := h.app.Commands.CategoryUpdate(ctx.UserContext(), cmd)

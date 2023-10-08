@@ -9,8 +9,8 @@ import (
 )
 
 type CategoryUpdateCmd struct {
+	CategoryUUID string                             `json:"-"`
 	AdminUUID    string                             `json:"-"`
-	CategoryUUID string                             `json:"-" params:"uuid" validate:"required,object_id"`
 	MainUUID     string                             `json:"mainUUID" validate:"omitempty,object_id"`
 	MainUUIDs    []string                           `json:"mainUUIDs"  validate:"required,dive,object_id"`
 	Images       []category.Image                   `json:"images" validate:"min=1,max=30,dive,required"`
