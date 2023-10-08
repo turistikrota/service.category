@@ -237,11 +237,7 @@ func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
 }
 
 func (r *repo) AdminFindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
-	filter := bson.M{
-		fields.MainUUIDs: bson.M{
-			"$size": 0,
-		},
-	}
+	filter := bson.M{}
 	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
 }
 
