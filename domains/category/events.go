@@ -59,7 +59,6 @@ type (
 	UserDetailEvent struct {
 		UUID string `json:"uuid"`
 		Name string `json:"name"`
-		Code string `json:"code"`
 	}
 )
 
