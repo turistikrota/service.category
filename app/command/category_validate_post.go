@@ -91,7 +91,6 @@ func successValidation(events category.Events, p *post.Entity, u post.UserDetail
 		User: category.UserDetailEvent{
 			UUID: u.UUID,
 			Name: u.Name,
-			Code: u.Code,
 		},
 	})
 	return &CategoryValidatePostRes{}, nil
@@ -111,7 +110,6 @@ func failValidation(events category.Events, field string, err *i18np.Error, p *p
 		User: category.UserDetailEvent{
 			UUID: u.UUID,
 			Name: u.Name,
-			Code: u.Code,
 		},
 	})
 	return &CategoryValidatePostRes{}, nil

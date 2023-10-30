@@ -15,7 +15,6 @@ type ValidationError struct {
 type UserDetail struct {
 	UUID string `json:"uuid"`
 	Name string `json:"name"`
-	Code string `json:"code"`
 }
 
 type Entity struct {
@@ -71,11 +70,9 @@ type Feature struct {
 }
 
 type Price struct {
-	StartDate           time.Time `json:"startDate"`
-	EndDate             time.Time `json:"endDate"`
-	Price               float64   `json:"price"`
-	Currencies          []string  `json:"currencies"`
-	IsCurrencyProtected bool      `json:"isCurrencyProtected"`
+	StartDate time.Time `json:"startDate"`
+	EndDate   time.Time `json:"endDate"`
+	Price     float64   `json:"price"`
 }
 
 type Location struct {
