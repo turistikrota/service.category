@@ -12,6 +12,7 @@ import (
 )
 
 type CategoryFindQuery struct {
+	Locale       string
 	CategoryUUID string `json:"uuid" params:"uuid" validate:"required,object_id"`
 }
 
@@ -39,11 +40,11 @@ func NewCategoryFindHandler(repo category.Repository, cacheSrv cache.Service, cn
 		}
 		return &CategoryFindResult{
 			AdminDetailDto: res.ToAdminDetail(),
-			MarkdownURL:    dressCdnMarkdown(cnf, res.UUID),
+			MarkdownURL:    dressCdnMarkdown(cnf, res.UUID, query.Locale),
 		}, nil
 	}
 }
 
-func dressCdnMarkdown(cnf config.App, identity string) string {
-	return fmt.Sprintf("%s/categories/%s.md", cnf.CDN.Url, identity)
+func dressCdnMarkdown(cnf config.App, identity string, locale string) string {
+	return fmt.Sprintf("%s/categories/md/%s.%s.md", cnf.CDN.Url, identity, locale)
 }

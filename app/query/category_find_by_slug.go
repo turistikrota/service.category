@@ -47,7 +47,7 @@ func NewCategoryFindBySlugHandler(repo category.Repository, cacheSrv cache.Servi
 		}
 		return &CategoryFindBySlugResult{
 			DetailDto:   res,
-			MarkdownURL: dressCdnMarkdown(cnf, res.UUID),
+			MarkdownURL: dressCdnMarkdown(cnf, res.UUID, query.Locale),
 		}, nil
 	}
 }
