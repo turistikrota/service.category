@@ -52,6 +52,7 @@ func NewCategoryValidatePostHandler(factory category.Factory, repo category.Repo
 				}
 			}
 		}
+		cmd.Post.IsValid = true
 		return successValidation(events, cmd.Post, cmd.User)
 	}
 }
