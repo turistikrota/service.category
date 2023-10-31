@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/cilloparch/cillop/middlewares/i18n"
 	"github.com/cilloparch/cillop/result"
 	"github.com/gofiber/fiber/v2"
 	"github.com/turistikrota/service.category/app/command"
@@ -91,6 +92,8 @@ func (h srv) CategoryAdminView(ctx *fiber.Ctx) error {
 func (h srv) CategoryView(ctx *fiber.Ctx) error {
 	query := query.CategoryFindBySlugQuery{}
 	h.parseParams(ctx, &query)
+	l, _ := i18n.GetLanguagesInContext(h.i18n, ctx)
+	query.Locale = l
 	res, err := h.app.Queries.CategoryFindBySlug(ctx.UserContext(), query)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
