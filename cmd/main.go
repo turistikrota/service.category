@@ -7,6 +7,7 @@ import (
 	"github.com/cilloparch/cillop/i18np"
 	"github.com/cilloparch/cillop/validation"
 	"github.com/turistikrota/service.category/config"
+	event_stream "github.com/turistikrota/service.category/server/event-stream"
 	"github.com/turistikrota/service.category/server/http"
 	"github.com/turistikrota/service.category/service"
 	"github.com/turistikrota/service.shared/auth/session"
@@ -59,6 +60,11 @@ func main() {
 		Topic:       cnf.Session.Topic,
 		Project:     cnf.TokenSrv.Project,
 	})
+	eventStream := event_stream.New(event_stream.Config{
+		App:    app,
+		Engine: eventEngine,
+		Topics: cnf.Topics,
+	})
 	http := http.New(http.Config{
 		Env:         cnf,
 		App:         app,
@@ -68,6 +74,7 @@ func main() {
 		TokenSrv:    tknSrv,
 		SessionSrv:  session.Service,
 	})
+	go eventStream.Listen()
 	http.Listen()
 }
 
