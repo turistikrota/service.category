@@ -27,7 +27,7 @@ type Entity struct {
 	Prices        []Price         `json:"prices"`
 	Location      Location        `json:"location"`
 	Boosts        []Boost         `json:"boosts"`
-	People        People          `json:"people"`
+	Validation    Validation      `json:"validation"`
 	Type          Type            `json:"type"`
 	Order         int             `json:"order"`
 	IsActive      bool            `json:"isActive"`
@@ -46,13 +46,19 @@ type Image struct {
 	Order int16  `json:"order"`
 }
 
-type People struct {
-	MinAdult int `json:"minAdult"`
-	MaxAdult int `json:"maxAdult"`
-	MinKid   int `json:"minKid"`
-	MaxKid   int `json:"maxKid"`
-	MinBaby  int `json:"minBaby"`
-	MaxBaby  int `json:"maxBaby"`
+type Validation struct {
+	MinAdult   *int  `json:"minAdult" bson:"min_adult" validate:"required,min=1,max=50,ltefield=MaxAdult"`
+	MaxAdult   *int  `json:"maxAdult" bson:"max_adult" validate:"required,min=0,max=50,gtefield=MinAdult"`
+	MinKid     *int  `json:"minKid" bson:"min_kid" validate:"required,min=0,max=50,ltefield=MaxKid"`
+	MaxKid     *int  `json:"maxKid" bson:"max_kid" validate:"required,min=0,max=50,gtefield=MinKid"`
+	MinBaby    *int  `json:"minBaby" bson:"min_baby" validate:"required,min=0,max=50,ltefield=MaxBaby"`
+	MaxBaby    *int  `json:"maxBaby" bson:"max_baby" validate:"required,min=0,max=50,gtefield=MinBaby"`
+	MinDate    *int  `json:"minDate" bson:"min_date" validate:"required,min=0,max=50,ltefield=MaxDate"`
+	MaxDate    *int  `json:"maxDate" bson:"max_date" validate:"required,min=0,max=50,gtefield=MinDate"`
+	OnlyFamily *bool `json:"onlyFamily" bson:"only_family" validate:"required"`
+	NoPet      *bool `json:"noPet" bson:"no_pet" validate:"required"`
+	NoSmoke    *bool `json:"noSmoke" bson:"no_smoke" validate:"required"`
+	NoAlcohol  *bool `json:"noAlcohol" bson:"no_alcohol" validate:"required"`
 }
 
 type Meta struct {
