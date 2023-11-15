@@ -39,7 +39,7 @@ func NewCategoryFindChildHandler(repo category.Repository, cacheSrv cache.Servic
 			}
 			return list, nil
 		}
-		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_admin_find_child_%v", query.UUID))
+		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_child_%v", query.UUID))
 		if err != nil {
 			return nil, err
 		}
