@@ -117,7 +117,7 @@ func (h srv) CategoryList(ctx *fiber.Ctx) error {
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}
-	return result.SuccessDetail(Messages.Success.CategoryList, res)
+	return result.SuccessDetail(Messages.Success.CategoryList, res.List)
 }
 
 func (h srv) CategoryListChild(ctx *fiber.Ctx) error {
@@ -127,7 +127,7 @@ func (h srv) CategoryListChild(ctx *fiber.Ctx) error {
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}
-	return result.SuccessDetail(Messages.Success.CategoryListChild, res)
+	return result.SuccessDetail(Messages.Success.CategoryListChild, res.List)
 }
 
 func (h srv) CategoryAdminList(ctx *fiber.Ctx) error {
