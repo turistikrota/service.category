@@ -69,7 +69,7 @@ func (h srv) Listen() error {
 			admin.Post("/", h.adminRoute(config.Roles.Category.Create), h.wrapWithTimeout(h.CategoryCreate))
 			admin.Get("/", h.adminRoute(config.Roles.Category.List), h.wrapWithTimeout(h.CategoryAdminList))
 			admin.Get("/parents", h.adminRoute(config.Roles.Category.List), h.wrapWithTimeout(h.CategoryAdminListParents))
-			admin.Get("/:mainUUID/child", h.adminRoute(config.Roles.Category.ListChildren), h.wrapWithTimeout(h.CategoryAdminListChild))
+			admin.Get("/:uuid/child", h.adminRoute(config.Roles.Category.ListChildren), h.wrapWithTimeout(h.CategoryAdminListChild))
 			admin.Put("/:uuid/enable", h.adminRoute(config.Roles.Category.Enable), h.wrapWithTimeout(h.CategoryEnable))
 			admin.Put("/:uuid/re-order", h.adminRoute(config.Roles.Category.ReOrder), h.wrapWithTimeout(h.CategoryUpdateOrder))
 			admin.Put("/:uuid/disable", h.adminRoute(config.Roles.Category.Disable), h.wrapWithTimeout(h.CategoryDisable))
