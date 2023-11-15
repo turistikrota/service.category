@@ -37,7 +37,7 @@ func NewCategoryValidatePostHandler(factory category.Factory, repo category.Repo
 			for _, input := range category.Inputs {
 				feature, idx, exist := cmd.Post.GetFeatureByCategoryInputUUID(input.UUID)
 				if !exist {
-					if input.IsRequired {
+					if input.IsRequired != nil && *input.IsRequired {
 						return failValidation(events, "features", factory.Errors.FeatureIsNotCorrect(), cmd.Post, cmd.User)
 					}
 				} else {
@@ -48,7 +48,8 @@ func NewCategoryValidatePostHandler(factory category.Factory, repo category.Repo
 							return failValidation(events, fmt.Sprintf("features[%v]", idx), err, cmd.Post, cmd.User)
 						}
 					}
-					feature.IsPayed = input.IsPayed
+					isPayed := input.IsPayed != nil && *input.IsPayed
+					feature.IsPayed = isPayed
 				}
 			}
 		}
