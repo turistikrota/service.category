@@ -101,15 +101,15 @@ func (h srv) CategoryView(ctx *fiber.Ctx) error {
 	return result.SuccessDetail(Messages.Success.CategoryView, res)
 }
 
-func (h srv) CategoryFindInputs(ctx *fiber.Ctx) error {
-	query := query.CategoryFindInputsQuery{}
+func (h srv) CategoryFindFields(ctx *fiber.Ctx) error {
+	query := query.CategoryFindFieldsQuery{}
 	h.parseQuery(ctx, &query)
-	res, err := h.app.Queries.CategoryFindInputs(ctx.UserContext(), query)
+	res, err := h.app.Queries.CategoryFindFields(ctx.UserContext(), query)
 	if err != nil {
 		l, a := i18n.GetLanguagesInContext(h.i18n, ctx)
 		return result.Error(h.i18n.TranslateFromError(*err, l, a))
 	}
-	return result.SuccessDetail(Messages.Success.CategoryView, res.List)
+	return result.SuccessDetail(Messages.Success.CategoryView, res)
 }
 
 func (h srv) CategoryList(ctx *fiber.Ctx) error {

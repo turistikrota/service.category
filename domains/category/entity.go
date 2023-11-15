@@ -37,7 +37,6 @@ type BaseTranslation struct {
 type Rule struct {
 	UUID         string                     `json:"uuid" bson:"uuid" validate:"required,uuid4"`
 	Translations map[Locale]BaseTranslation `json:"translations" bson:"translations" validate:"required,dive"`
-	StrictLevel  int16                      `json:"strictLevel" bson:"strict_level"  validate:"required,min=0,max=10"`
 }
 
 type Alert struct {

@@ -21,7 +21,7 @@ type Commands struct {
 }
 
 type Queries struct {
-	CategoryFindInputs       query.CategoryFindInputsHandler
+	CategoryFindFields       query.CategoryFindFieldsHandler
 	CategoryFind             query.CategoryFindHandler
 	CategoryFindBySlug       query.CategoryFindBySlugHandler
 	CategoryFindChild        query.CategoryFindChildHandler

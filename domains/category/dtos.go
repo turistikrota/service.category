@@ -28,6 +28,19 @@ type InputGroupDto struct {
 	Inputs       []Input                    `json:"inputs" bson:"inputs" validate:"required,dive"`
 }
 
+type AlertDto struct {
+	UUID         string                     `json:"uuid"`
+	CategoryMeta map[Locale]*MetaListDto    `json:"categoryMeta"`
+	Translations map[Locale]BaseTranslation `json:"translations"`
+	Type         string                     `json:"type"`
+}
+
+type RuleDto struct {
+	UUID         string                     `json:"uuid"`
+	CategoryMeta map[Locale]*MetaListDto    `json:"categoryMeta"`
+	Translations map[Locale]BaseTranslation `json:"translations"`
+}
+
 type AdminListDto struct {
 	UUID      string                  `json:"uuid" bson:"_id,omitempty"`
 	MainUUIDs []string                `json:"mainUUIDs" bson:"main_uuids"`
@@ -94,6 +107,31 @@ func (e *Entity) ToInputGroup() []*InputGroupDto {
 			Icon:         group.Icon,
 			Translations: group.Translations,
 			Inputs:       groupInputs[group.UUID],
+		})
+	}
+	return res
+}
+
+func (e *Entity) ToAlert() []*AlertDto {
+	res := []*AlertDto{}
+	for _, v := range e.Alerts {
+		res = append(res, &AlertDto{
+			UUID:         v.UUID,
+			CategoryMeta: e.ToMetaList(),
+			Translations: v.Translations,
+			Type:         v.Type,
+		})
+	}
+	return res
+}
+
+func (e *Entity) ToRule() []*RuleDto {
+	res := []*RuleDto{}
+	for _, v := range e.Rules {
+		res = append(res, &RuleDto{
+			UUID:         v.UUID,
+			CategoryMeta: e.ToMetaList(),
+			Translations: v.Translations,
 		})
 	}
 	return res

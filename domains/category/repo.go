@@ -30,7 +30,7 @@ type Repository interface {
 	AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	UpdateOrder(ctx context.Context, categoryUUID string, order int16) *i18np.Error
 	FindBySlug(ctx context.Context, i18n I18nDetail) (*Entity, *i18np.Error)
-	FindInputsByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
+	FindFieldsByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
 	FindByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
 }
 
@@ -222,7 +222,7 @@ func (r *repo) FindBySlug(ctx context.Context, i18n I18nDetail) (*Entity, *i18np
 	return *e, nil
 }
 
-func (r *repo) FindInputsByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error) {
+func (r *repo) FindFieldsByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error) {
 	ids, err := mongo2.TransformIds(categoryUUIDs)
 	if err != nil {
 		return nil, r.factory.Errors.InvalidUUID("find by uuids")
@@ -236,7 +236,7 @@ func (r *repo) FindInputsByUUIDs(ctx context.Context, categoryUUIDs []string) ([
 			"$ne": true,
 		},
 	}
-	return r.helper.GetListFilter(ctx, filter, r.inputOptions())
+	return r.helper.GetListFilter(ctx, filter, r.fieldOptions())
 }
 
 func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
@@ -306,11 +306,15 @@ func (r *repo) adminListOptions() *options.FindOptions {
 	return opts
 }
 
-func (r *repo) inputOptions() *options.FindOptions {
+func (r *repo) fieldOptions() *options.FindOptions {
 	opts := &options.FindOptions{}
 	opts.SetProjection(bson.M{
+		fields.UUID:        1,
 		fields.Inputs:      1,
 		fields.InputGroups: 1,
+		fields.Meta:        1,
+		fields.Alerts:      1,
+		fields.Rules:       1,
 	})
 	opts.SetSort(bson.M{
 		fields.Order: 1,
