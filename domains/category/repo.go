@@ -309,8 +309,12 @@ func (r *repo) adminListOptions() *options.FindOptions {
 func (r *repo) inputOptions() *options.FindOptions {
 	opts := &options.FindOptions{}
 	opts.SetProjection(bson.M{
+		fields.UUID:        1,
 		fields.Inputs:      1,
 		fields.InputGroups: 1,
+		fields.Meta:        1,
+		fields.Alerts:      1,
+		fields.Rules:       1,
 	})
 	opts.SetSort(bson.M{
 		fields.Order: 1,

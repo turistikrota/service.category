@@ -28,6 +28,13 @@ type InputGroupDto struct {
 	Inputs       []Input                    `json:"inputs" bson:"inputs" validate:"required,dive"`
 }
 
+type CategoryForAlertAndRuleDto struct {
+	UUID   string                  `json:"uuid"`
+	Meta   map[Locale]*MetaListDto `json:"meta"`
+	Alerts []Alert                 `json:"alerts"`
+	Rules  []Rule                  `json:"rules"`
+}
+
 type AdminListDto struct {
 	UUID      string                  `json:"uuid" bson:"_id,omitempty"`
 	MainUUIDs []string                `json:"mainUUIDs" bson:"main_uuids"`
@@ -97,6 +104,15 @@ func (e *Entity) ToInputGroup() []*InputGroupDto {
 		})
 	}
 	return res
+}
+
+func (e *Entity) ToCategoryForAlertAndRule() *CategoryForAlertAndRuleDto {
+	return &CategoryForAlertAndRuleDto{
+		UUID:   e.UUID,
+		Meta:   e.ToMetaList(),
+		Alerts: e.Alerts,
+		Rules:  e.Rules,
+	}
 }
 
 func (m *Entity) ToMetaList() map[Locale]*MetaListDto {

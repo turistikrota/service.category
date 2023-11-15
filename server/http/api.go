@@ -109,7 +109,7 @@ func (h srv) CategoryFindInputs(ctx *fiber.Ctx) error {
 		l, a := i18n.GetLanguagesInContext(h.i18n, ctx)
 		return result.Error(h.i18n.TranslateFromError(*err, l, a))
 	}
-	return result.SuccessDetail(Messages.Success.CategoryView, res.List)
+	return result.SuccessDetail(Messages.Success.CategoryView, res)
 }
 
 func (h srv) CategoryList(ctx *fiber.Ctx) error {
