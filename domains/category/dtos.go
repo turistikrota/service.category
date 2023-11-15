@@ -21,6 +21,13 @@ type AdminDetailDto struct {
 	*Entity
 }
 
+type InputGroupDto struct {
+	UUID         string                     `json:"uuid" bson:"uuid" validate:"required,uuid4"`
+	Icon         string                     `json:"icon" bson:"icon" validate:"required,max=255,min=3"`
+	Translations map[Locale]BaseTranslation `json:"translations" bson:"translations" validate:"required,dive"`
+	Inputs       []Input                    `json:"inputs" bson:"inputs" validate:"required,dive"`
+}
+
 type AdminListDto struct {
 	UUID      string                  `json:"uuid" bson:"_id,omitempty"`
 	MainUUIDs []string                `json:"mainUUIDs" bson:"main_uuids"`
@@ -73,6 +80,23 @@ func (e *Entity) ToAdminList() *AdminListDto {
 		IsDeleted: e.IsDeleted,
 		UpdatedAt: e.UpdatedAt,
 	}
+}
+
+func (e *Entity) ToInputGroup() []*InputGroupDto {
+	groupInputs := map[string][]Input{}
+	for _, input := range e.Inputs {
+		groupInputs[input.GroupUUID] = append(groupInputs[input.GroupUUID], input)
+	}
+	res := []*InputGroupDto{}
+	for _, group := range e.InputGroups {
+		res = append(res, &InputGroupDto{
+			UUID:         group.UUID,
+			Icon:         group.Icon,
+			Translations: group.Translations,
+			Inputs:       groupInputs[group.UUID],
+		})
+	}
+	return res
 }
 
 func (m *Entity) ToMetaList() map[Locale]*MetaListDto {

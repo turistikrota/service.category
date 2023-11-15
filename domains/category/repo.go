@@ -30,6 +30,7 @@ type Repository interface {
 	AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	UpdateOrder(ctx context.Context, categoryUUID string, order int16) *i18np.Error
 	FindBySlug(ctx context.Context, i18n I18nDetail) (*Entity, *i18np.Error)
+	FindInputsByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
 	FindByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
 }
 
@@ -221,6 +222,23 @@ func (r *repo) FindBySlug(ctx context.Context, i18n I18nDetail) (*Entity, *i18np
 	return *e, nil
 }
 
+func (r *repo) FindInputsByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error) {
+	ids, err := mongo2.TransformIds(categoryUUIDs)
+	if err != nil {
+		return nil, r.factory.Errors.InvalidUUID("find by uuids")
+	}
+	filter := bson.M{
+		fields.UUID: bson.M{
+			"$in": ids,
+		},
+		fields.IsActive: true,
+		fields.IsDeleted: bson.M{
+			"$ne": true,
+		},
+	}
+	return r.helper.GetListFilter(ctx, filter, r.inputOptions())
+}
+
 func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
 		fields.MainUUIDs: bson.M{
@@ -284,6 +302,18 @@ func (r *repo) adminListOptions() *options.FindOptions {
 		fields.IsActive:  1,
 		fields.IsDeleted: 1,
 		fields.UpdatedAt: 1,
+	})
+	return opts
+}
+
+func (r *repo) inputOptions() *options.FindOptions {
+	opts := &options.FindOptions{}
+	opts.SetProjection(bson.M{
+		fields.Inputs:      1,
+		fields.InputGroups: 1,
+	})
+	opts.SetSort(bson.M{
+		fields.Order: 1,
 	})
 	return opts
 }

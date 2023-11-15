@@ -40,6 +40,7 @@ func NewApplication(cnf Config) app.Application {
 			CategoryValidatePost: command.NewCategoryValidatePostHandler(categoryFactory, categoryRepo, categoryValidators, categoryEvents),
 		},
 		Queries: app.Queries{
+			CategoryFindInputs:       query.NewCategoryFindInputsHandler(categoryRepo, cnf.CacheSrv),
 			CategoryFind:             query.NewCategoryFindHandler(categoryRepo, cnf.CacheSrv, cnf.App),
 			CategoryFindBySlug:       query.NewCategoryFindBySlugHandler(categoryRepo, cnf.CacheSrv, cnf.App),
 			CategoryFindChild:        query.NewCategoryFindChildHandler(categoryRepo, cnf.CacheSrv),
