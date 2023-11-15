@@ -11,7 +11,7 @@ import (
 )
 
 type CategoryFindChildQuery struct {
-	MainUUID string `json:"mainUUID" params:"mainUUID" validate:"required,object_id"`
+	UUID string `json:"uuid" params:"uuid" validate:"required,object_id"`
 }
 
 type CategoryFindChildResult struct {
@@ -29,7 +29,7 @@ func NewCategoryFindChildHandler(repo category.Repository, cacheSrv cache.Servic
 
 	return func(ctx context.Context, query CategoryFindChildQuery) (*CategoryFindChildResult, *i18np.Error) {
 		cacheHandler := func() ([]*category.ListDto, *i18np.Error) {
-			res, err := repo.AdminFindChild(ctx, query.MainUUID)
+			res, err := repo.AdminFindChild(ctx, query.UUID)
 			if err != nil {
 				return nil, err
 			}
@@ -39,7 +39,7 @@ func NewCategoryFindChildHandler(repo category.Repository, cacheSrv cache.Servic
 			}
 			return list, nil
 		}
-		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_admin_find_child_%v", query.MainUUID))
+		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_admin_find_child_%v", query.UUID))
 		if err != nil {
 			return nil, err
 		}
