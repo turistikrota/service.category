@@ -30,14 +30,14 @@ type InputGroupDto struct {
 
 type AlertDto struct {
 	UUID         string                     `json:"uuid"`
-	CategoryMeta map[Locale]*MetaListDto    `json:"categoryMeta"`
+	CategoryMeta map[Locale]*MetaMiniDto    `json:"categoryMeta"`
 	Translations map[Locale]BaseTranslation `json:"translations"`
 	Type         string                     `json:"type"`
 }
 
 type RuleDto struct {
 	UUID         string                     `json:"uuid"`
-	CategoryMeta map[Locale]*MetaListDto    `json:"categoryMeta"`
+	CategoryMeta map[Locale]*MetaMiniDto    `json:"categoryMeta"`
 	Translations map[Locale]BaseTranslation `json:"translations"`
 }
 
@@ -56,6 +56,11 @@ type MetaListDto struct {
 	Description string `json:"description" bson:"description"`
 	Title       string `json:"title" bson:"title"`
 	Slug        string `json:"slug" bson:"slug"`
+}
+
+type MetaMiniDto struct {
+	Name string `json:"name" bson:"name"`
+	Slug string `json:"slug" bson:"slug"`
 }
 
 func (e *Entity) ToList() *ListDto {
@@ -117,7 +122,7 @@ func (e *Entity) ToAlert() []*AlertDto {
 	for _, v := range e.Alerts {
 		res = append(res, &AlertDto{
 			UUID:         v.UUID,
-			CategoryMeta: e.ToMetaList(),
+			CategoryMeta: e.ToMetaMini(),
 			Translations: v.Translations,
 			Type:         v.Type,
 		})
@@ -130,7 +135,7 @@ func (e *Entity) ToRule() []*RuleDto {
 	for _, v := range e.Rules {
 		res = append(res, &RuleDto{
 			UUID:         v.UUID,
-			CategoryMeta: e.ToMetaList(),
+			CategoryMeta: e.ToMetaMini(),
 			Translations: v.Translations,
 		})
 	}
@@ -145,11 +150,26 @@ func (m *Entity) ToMetaList() map[Locale]*MetaListDto {
 	return res
 }
 
+func (m *Entity) ToMetaMini() map[Locale]*MetaMiniDto {
+	res := map[Locale]*MetaMiniDto{}
+	for k, v := range m.Meta {
+		res[k] = v.ToMini()
+	}
+	return res
+}
+
 func (m *Meta) ToList() *MetaListDto {
 	return &MetaListDto{
 		Name:        m.Name,
 		Description: m.Description,
 		Title:       m.Title,
 		Slug:        m.Slug,
+	}
+}
+
+func (m *Meta) ToMini() *MetaMiniDto {
+	return &MetaMiniDto{
+		Name: m.Name,
+		Slug: m.Slug,
 	}
 }
