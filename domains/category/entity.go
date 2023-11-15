@@ -56,10 +56,10 @@ type Input struct {
 	GroupUUID    string                       `json:"groupUUID" bson:"group_uuid"`
 	Type         InputType                    `json:"type" bson:"type"  validate:"required"`
 	Translations map[Locale]*InputTranslation `json:"translations" bson:"translations" validate:"required,dive"`
-	IsRequired   bool                         `json:"isRequired" bson:"is_required"  validate:"required,boolean"`
-	IsMultiple   bool                         `json:"isMultiple" bson:"is_multiple"  validate:"required,boolean"`
-	IsUnique     bool                         `json:"isUnique" bson:"is_unique"  validate:"required,boolean"`
-	IsPayed      bool                         `json:"isPayed" bson:"is_payed"  validate:"required,boolean"`
+	IsRequired   *bool                        `json:"isRequired" bson:"is_required"  validate:"required,boolean"`
+	IsMultiple   *bool                        `json:"isMultiple" bson:"is_multiple"  validate:"required,boolean"`
+	IsUnique     *bool                        `json:"isUnique" bson:"is_unique"  validate:"required,boolean"`
+	IsPayed      *bool                        `json:"isPayed" bson:"is_payed"  validate:"required,boolean"`
 	Extra        []InputExtra                 `json:"extra" bson:"extra"  validate:"required,dive"`
 	Options      []string                     `json:"options" bson:"options"  validate:"required,min=0"`
 }

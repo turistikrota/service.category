@@ -49,7 +49,7 @@ func newNumberValidator(errors Errors, config config.App) Validator {
 
 func newSelectValidator(errors Errors, config config.App) Validator {
 	return newValidator(InputTypeSelect, func(input Input, value interface{}) *i18np.Error {
-		if input.IsMultiple {
+		if *input.IsMultiple {
 			val, err := value.([]string)
 			if err {
 				return errors.InvalidCategoryInputType(input.Type.String(), value)
@@ -74,7 +74,7 @@ func newSelectValidator(errors Errors, config config.App) Validator {
 
 func newRadioValidator(errors Errors, config config.App) Validator {
 	return newValidator(InputTypeRadio, func(input Input, value interface{}) *i18np.Error {
-		if input.IsMultiple {
+		if *input.IsMultiple {
 			val, err := value.([]string)
 			if err {
 				return errors.InvalidCategoryInputType(input.Type.String(), value)
