@@ -49,6 +49,6 @@ func NewCategoryFindFieldsHandler(repo category.Repository, cacheSrv cache.Servi
 				Rules:       rules,
 			}, nil
 		}
-		return cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_Fields_%v", query.UUIDs))
+		return cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_fields_%v", query.UUIDs))
 	}
 }
