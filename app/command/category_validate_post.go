@@ -78,7 +78,7 @@ func validateCategoryChain(ctx context.Context, factory category.Factory, catego
 			if i == 0 {
 				return i, factory.Errors.CategoryUUIDsIsNotCorrect()
 			}
-			if category.MainUUIDs[0] != categories[i-1].UUID {
+			if category.MainUUIDs[i-1] != categories[i-1].UUID {
 				return i, factory.Errors.CategoryUUIDsIsNotCorrect()
 			}
 		}
