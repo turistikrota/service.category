@@ -11,13 +11,13 @@ type Application struct {
 }
 
 type Commands struct {
-	CategoryCreate       command.CategoryCreateHandler
-	CategoryUpdate       command.CategoryUpdateHandler
-	CategoryDelete       command.CategoryDeleteHandler
-	CategoryDisable      command.CategoryDisableHandler
-	CategoryEnable       command.CategoryEnableHandler
-	CategoryUpdateOrder  command.CategoryUpdateOrderHandler
-	CategoryValidatePost command.CategoryValidatePostHandler
+	CategoryCreate          command.CategoryCreateHandler
+	CategoryUpdate          command.CategoryUpdateHandler
+	CategoryDelete          command.CategoryDeleteHandler
+	CategoryDisable         command.CategoryDisableHandler
+	CategoryEnable          command.CategoryEnableHandler
+	CategoryUpdateOrder     command.CategoryUpdateOrderHandler
+	CategoryValidateListing command.CategoryValidateListingHandler
 }
 
 type Queries struct {

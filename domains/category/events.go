@@ -5,7 +5,7 @@ import (
 
 	"github.com/cilloparch/cillop/events"
 	"github.com/turistikrota/service.category/config"
-	"github.com/turistikrota/service.category/domains/post"
+	"github.com/turistikrota/service.category/domains/listing"
 )
 
 type Events interface {
@@ -15,8 +15,8 @@ type Events interface {
 	Disabled(event DisabledEvent)
 	Deleted(event DeletedEvent)
 	UpdateOrder(event OrderUpdatedEvent)
-	PostValidationSuccess(event PostValidationSuccessEvent)
-	PostValidationFailed(event PostValidationFailedEvent)
+	ListingValidationSuccess(event ListingValidationSuccessEvent)
+	ListingValidationFailed(event ListingValidationFailedEvent)
 }
 
 type (
@@ -45,16 +45,16 @@ type (
 		AdminUUID  string `json:"admin_uuid"`
 		EntityUUID string `json:"entity_uuid"`
 	}
-	PostValidationSuccessEvent struct {
-		PostUUID string          `json:"postUUID"`
-		Post     *post.Entity    `json:"entity"`
-		User     UserDetailEvent `json:"user"`
+	ListingValidationSuccessEvent struct {
+		ListingUUID string          `json:"listingUUID"`
+		Listing     *listing.Entity `json:"entity"`
+		User        UserDetailEvent `json:"user"`
 	}
-	PostValidationFailedEvent struct {
-		PostUUID string                  `json:"postUUID"`
-		Post     *post.Entity            `json:"entity"`
-		Errors   []*post.ValidationError `json:"errors"`
-		User     UserDetailEvent         `json:"user"`
+	ListingValidationFailedEvent struct {
+		ListingUUID string                     `json:"listingUUID"`
+		Listing     *listing.Entity            `json:"entity"`
+		Errors      []*listing.ValidationError `json:"errors"`
+		User        UserDetailEvent            `json:"user"`
 	}
 	UserDetailEvent struct {
 		UUID string `json:"uuid"`
@@ -103,12 +103,12 @@ func (e *categoryEvents) UpdateOrder(event OrderUpdatedEvent) {
 	_ = e.publisher.Publish(e.topics.Category.OrderUpdated, &event)
 }
 
-func (e *categoryEvents) PostValidationSuccess(event PostValidationSuccessEvent) {
-	fmt.Println(fmt.Sprintf("PostValidationSuccessEvent event fired to %s", e.topics.Category.PostValidationSuccess))
-	_ = e.publisher.Publish(e.topics.Category.PostValidationSuccess, &event)
+func (e *categoryEvents) ListingValidationSuccess(event ListingValidationSuccessEvent) {
+	fmt.Println(fmt.Sprintf("ListingValidationSuccessEvent event fired to %s", e.topics.Category.ListingValidationSuccess))
+	_ = e.publisher.Publish(e.topics.Category.ListingValidationSuccess, &event)
 }
 
-func (e *categoryEvents) PostValidationFailed(event PostValidationFailedEvent) {
-	fmt.Println(fmt.Sprintf("PostValidationFailedEvent event fired to %s", e.topics.Category.PostValidationFailed))
-	_ = e.publisher.Publish(e.topics.Category.PostValidationFailed, &event)
+func (e *categoryEvents) ListingValidationFailed(event ListingValidationFailedEvent) {
+	fmt.Println(fmt.Sprintf("ListingValidationFailedEvent event fired to %s", e.topics.Category.ListingValidationFailed))
+	_ = e.publisher.Publish(e.topics.Category.ListingValidationFailed, &event)
 }

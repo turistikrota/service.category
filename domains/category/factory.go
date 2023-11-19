@@ -5,7 +5,7 @@ import (
 
 	"github.com/cilloparch/cillop/i18np"
 	"github.com/google/uuid"
-	"github.com/turistikrota/service.category/domains/post"
+	"github.com/turistikrota/service.category/domains/listing"
 )
 
 type Factory struct {
@@ -38,7 +38,7 @@ type NewConfig struct {
 func (f Factory) New(cnf NewConfig) *Entity {
 	t := time.Now()
 	return &Entity{
-		MainUUID:   cnf.MainUUID,
+		MainUUID:    cnf.MainUUID,
 		MainUUIDs:   cnf.MainUUIDs,
 		Meta:        cnf.Meta,
 		Images:      cnf.Images,
@@ -99,7 +99,7 @@ func (f Factory) validateInputUUIDs(input Input) *i18np.Error {
 	return nil
 }
 
-func (f Factory) validatePostFeatureByInputType(input Input, feature post.Feature) *i18np.Error {
+func (f Factory) validateListingFeatureByInputType(input Input, feature listing.Feature) *i18np.Error {
 	return nil
 }
 
