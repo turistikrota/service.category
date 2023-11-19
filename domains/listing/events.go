@@ -1,6 +1,6 @@
-package post
+package listing
 
-type PostUpdatedEvent struct {
+type ListingUpdatedEvent struct {
 	Entity *Entity    `json:"entity"`
 	User   UserDetail `json:"user"`
 }

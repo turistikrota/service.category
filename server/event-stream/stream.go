@@ -28,7 +28,7 @@ func New(config Config) server.Server {
 }
 
 func (s srv) Listen() error {
-	_ = s.engine.Subscribe(s.topics.Post.Created, s.OnPostUpdated)
-	_ = s.engine.Subscribe(s.topics.Post.Updated, s.OnPostUpdated)
+	_ = s.engine.Subscribe(s.topics.Listing.Created, s.OnListingUpdated)
+	_ = s.engine.Subscribe(s.topics.Listing.Updated, s.OnListingUpdated)
 	return nil
 }

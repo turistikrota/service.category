@@ -31,13 +31,13 @@ func NewApplication(cnf Config) app.Application {
 
 	return app.Application{
 		Commands: app.Commands{
-			CategoryCreate:       command.NewCategoryCreateHandler(categoryFactory, categoryRepo, categoryEvents),
-			CategoryUpdate:       command.NewCategoryUpdateHandler(categoryFactory, categoryRepo, categoryEvents),
-			CategoryDelete:       command.NewCategoryDeleteHandler(categoryRepo, categoryEvents),
-			CategoryDisable:      command.NewCategoryDisableHandler(categoryRepo, categoryEvents),
-			CategoryEnable:       command.NewCategoryEnableHandler(categoryRepo, categoryEvents),
-			CategoryUpdateOrder:  command.NewCategoryUpdateOrderHandler(categoryRepo, categoryEvents),
-			CategoryValidatePost: command.NewCategoryValidatePostHandler(categoryFactory, categoryRepo, categoryValidators, categoryEvents),
+			CategoryCreate:          command.NewCategoryCreateHandler(categoryFactory, categoryRepo, categoryEvents),
+			CategoryUpdate:          command.NewCategoryUpdateHandler(categoryFactory, categoryRepo, categoryEvents),
+			CategoryDelete:          command.NewCategoryDeleteHandler(categoryRepo, categoryEvents),
+			CategoryDisable:         command.NewCategoryDisableHandler(categoryRepo, categoryEvents),
+			CategoryEnable:          command.NewCategoryEnableHandler(categoryRepo, categoryEvents),
+			CategoryUpdateOrder:     command.NewCategoryUpdateOrderHandler(categoryRepo, categoryEvents),
+			CategoryValidateListing: command.NewCategoryValidateListingHandler(categoryFactory, categoryRepo, categoryValidators, categoryEvents),
 		},
 		Queries: app.Queries{
 			CategoryFindFields:       query.NewCategoryFindFieldsHandler(categoryRepo, cnf.CacheSrv),

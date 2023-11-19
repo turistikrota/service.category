@@ -60,23 +60,23 @@ type RSA struct {
 
 type Topics struct {
 	Category CategoryEvents
-	Post     PostEvents
+	Listing  ListingEvents
 }
 
 type CategoryEvents struct {
-	Created               string `env:"STREAMING_TOPIC_CATEGORY_CREATED"`
-	Updated               string `env:"STREAMING_TOPIC_CATEGORY_UPDATED"`
-	Enabled               string `env:"STREAMING_TOPIC_CATEGORY_ENABLED"`
-	Disabled              string `env:"STREAMING_TOPIC_CATEGORY_DISABLED"`
-	Deleted               string `env:"STREAMING_TOPIC_CATEGORY_DELETED"`
-	OrderUpdated          string `env:"STREAMING_TOPIC_CATEGORY_ORDER_UPDATED"`
-	PostValidationSuccess string `env:"STREAMING_TOPIC_CATEGORY_POST_VALIDATION_SUCCESS"`
-	PostValidationFailed  string `env:"STREAMING_TOPIC_CATEGORY_POST_VALIDATION_FAILED"`
+	Created                  string `env:"STREAMING_TOPIC_CATEGORY_CREATED"`
+	Updated                  string `env:"STREAMING_TOPIC_CATEGORY_UPDATED"`
+	Enabled                  string `env:"STREAMING_TOPIC_CATEGORY_ENABLED"`
+	Disabled                 string `env:"STREAMING_TOPIC_CATEGORY_DISABLED"`
+	Deleted                  string `env:"STREAMING_TOPIC_CATEGORY_DELETED"`
+	OrderUpdated             string `env:"STREAMING_TOPIC_CATEGORY_ORDER_UPDATED"`
+	ListingValidationSuccess string `env:"STREAMING_TOPIC_CATEGORY_LISTING_VALIDATION_SUCCESS"`
+	ListingValidationFailed  string `env:"STREAMING_TOPIC_CATEGORY_LISTING_VALIDATION_FAILED"`
 }
 
-type PostEvents struct {
-	Created string `env:"STREAMING_TOPIC_POST_CREATED"`
-	Updated string `env:"STREAMING_TOPIC_POST_UPDATED"`
+type ListingEvents struct {
+	Created string `env:"STREAMING_TOPIC_LISTING_CREATED"`
+	Updated string `env:"STREAMING_TOPIC_LISTING_UPDATED"`
 }
 
 type Nats struct {

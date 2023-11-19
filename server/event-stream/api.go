@@ -5,17 +5,17 @@ import (
 	"encoding/json"
 
 	"github.com/turistikrota/service.category/app/command"
-	"github.com/turistikrota/service.category/domains/post"
+	"github.com/turistikrota/service.category/domains/listing"
 )
 
-func (s srv) OnPostUpdated(data []byte) {
-	e := post.PostUpdatedEvent{}
+func (s srv) OnListingUpdated(data []byte) {
+	e := listing.ListingUpdatedEvent{}
 	err := json.Unmarshal(data, &e)
 	if err != nil {
 		return
 	}
-	s.app.Commands.CategoryValidatePost(context.Background(), command.CategoryValidatePostCmd{
-		Post: e.Entity,
-		User: e.User,
+	s.app.Commands.CategoryValidateListing(context.Background(), command.CategoryValidateListingCmd{
+		Listing: e.Entity,
+		User:    e.User,
 	})
 }
