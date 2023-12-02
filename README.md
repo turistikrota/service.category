@@ -20,7 +20,7 @@ docker secret create jwt_public_key ./jwtRS256.key.pub
 ## 3. build image
 
 ```bash
-docker build --build-arg GITHUB_USER=<USER_NAME> --build-arg GITHUB_TOKEN=<ACCESS_TOKEN> -t github.com/turistikrota/service.category .  
+docker build --build-arg GITHUB_USER=<GITHUB_USER> --build-arg GITHUB_TOKEN=<GITHUB_TOKEN> -t github.com/turistikrota/service.category .  
 ```
 
 ## 4. run container
