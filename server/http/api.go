@@ -102,9 +102,9 @@ func (h srv) CategoryView(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryFindFields(ctx *fiber.Ctx) error {
-	query := query.CategoryFindFieldsQuery{}
-	h.parseQuery(ctx, &query)
-	res, err := h.app.Queries.CategoryFindFields(ctx.UserContext(), query)
+	q := query.CategoryFindFieldsQuery{}
+	h.parseQuery(ctx, &q)
+	res, err := h.app.Queries.CategoryFindFields(ctx.UserContext(), q)
 	if err != nil {
 		l, a := i18n.GetLanguagesInContext(h.i18n, ctx)
 		return result.Error(h.i18n.TranslateFromError(*err, l, a))
@@ -113,7 +113,9 @@ func (h srv) CategoryFindFields(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryList(ctx *fiber.Ctx) error {
-	res, err := h.app.Queries.CategoryFindAll(ctx.UserContext(), query.CategoryFindAllQuery{})
+	q := query.CategoryFindAllQuery{}
+	h.parseQuery(ctx, &q)
+	res, err := h.app.Queries.CategoryFindAll(ctx.UserContext(), q)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}

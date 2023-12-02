@@ -25,7 +25,7 @@ type Repository interface {
 	Enable(ctx context.Context, categoryUUID string) *i18np.Error
 	FindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	Find(ctx context.Context, categoryUUID string) (*Entity, *i18np.Error)
-	FindAll(ctx context.Context) ([]*Entity, *i18np.Error)
+	FindAll(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
 	AdminFindAll(ctx context.Context, onlyMains bool) ([]*Entity, *i18np.Error)
 	AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	UpdateOrder(ctx context.Context, categoryUUID string, order int16) *i18np.Error
@@ -239,7 +239,7 @@ func (r *repo) FindFieldsByUUIDs(ctx context.Context, categoryUUIDs []string) ([
 	return r.helper.GetListFilter(ctx, filter, r.fieldOptions())
 }
 
-func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
+func (r *repo) FindAll(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
 		fields.MainUUIDs: bson.M{
 			"$size": 0,
@@ -248,6 +248,15 @@ func (r *repo) FindAll(ctx context.Context) ([]*Entity, *i18np.Error) {
 			"$ne": true,
 		},
 		fields.IsActive: true,
+	}
+	if len(categoryUUIDs) > 0 {
+		ids, err := mongo2.TransformIds(categoryUUIDs)
+		if err != nil {
+			return nil, r.factory.Errors.InvalidUUID("find by uuids")
+		}
+		filter[fields.UUID] = bson.M{
+			"$in": ids,
+		}
 	}
 	return r.helper.GetListFilter(ctx, filter, r.listOptions())
 }

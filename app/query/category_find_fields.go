@@ -23,7 +23,7 @@ type CategoryFindFieldsResult struct {
 type CategoryFindFieldsHandler cqrs.HandlerFunc[CategoryFindFieldsQuery, *CategoryFindFieldsResult]
 
 func NewCategoryFindFieldsHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindFieldsHandler {
-	cache := cache.New[*CategoryFindFieldsResult](cacheSrv)
+	c := cache.New[*CategoryFindFieldsResult](cacheSrv)
 
 	createCacheEntity := func() *CategoryFindFieldsResult {
 		return &CategoryFindFieldsResult{}
@@ -49,6 +49,6 @@ func NewCategoryFindFieldsHandler(repo category.Repository, cacheSrv cache.Servi
 				Rules:       rules,
 			}, nil
 		}
-		return cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_fields_%v", query.UUIDs))
+		return c.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_fields_%v", query.UUIDs))
 	}
 }
