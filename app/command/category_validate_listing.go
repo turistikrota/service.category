@@ -88,8 +88,10 @@ func validateCategoryChain(ctx context.Context, factory category.Factory, catego
 
 func successValidation(events category.Events, p *listing.Entity, u listing.UserDetail) (*CategoryValidateListingRes, *i18np.Error) {
 	events.ListingValidationSuccess(category.ListingValidationSuccessEvent{
-		ListingUUID: p.UUID,
-		Listing:     p,
+		ListingUUID:  p.UUID,
+		BusinessUUID: p.Business.UUID,
+		BusinessName: p.Business.NickName,
+		Listing:      p,
 		User: category.UserDetailEvent{
 			UUID: u.UUID,
 			Name: u.Name,
@@ -106,9 +108,11 @@ func failValidation(events category.Events, field string, err *i18np.Error, p *l
 		Params:  *err.Params,
 	})
 	events.ListingValidationFailed(category.ListingValidationFailedEvent{
-		ListingUUID: p.UUID,
-		Listing:     p,
-		Errors:      errors,
+		ListingUUID:  p.UUID,
+		BusinessUUID: p.Business.UUID,
+		BusinessName: p.Business.NickName,
+		Listing:      p,
+		Errors:       errors,
 		User: category.UserDetailEvent{
 			UUID: u.UUID,
 			Name: u.Name,

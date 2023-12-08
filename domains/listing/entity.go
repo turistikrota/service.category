@@ -19,7 +19,7 @@ type UserDetail struct {
 
 type Entity struct {
 	UUID          string          `json:"uuid"`
-	Owner         Owner           `json:"owner"`
+	Business      Business        `json:"business"`
 	Images        []Image         `json:"images"`
 	Meta          map[Locale]Meta `json:"meta"`
 	CategoryUUIDs []string        `json:"categoryUUIDs"`
@@ -36,7 +36,7 @@ type Entity struct {
 	CreatedAt     time.Time       `json:"createdAt"`
 	UpdatedAt     time.Time       `json:"updatedAt"`
 }
-type Owner struct {
+type Business struct {
 	UUID     string `json:"uuid"`
 	NickName string `json:"nickName"`
 }

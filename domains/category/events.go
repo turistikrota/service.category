@@ -1,8 +1,6 @@
 package category
 
 import (
-	"fmt"
-
 	"github.com/cilloparch/cillop/events"
 	"github.com/turistikrota/service.category/config"
 	"github.com/turistikrota/service.category/domains/listing"
@@ -46,15 +44,19 @@ type (
 		EntityUUID string `json:"entity_uuid"`
 	}
 	ListingValidationSuccessEvent struct {
-		ListingUUID string          `json:"listingUUID"`
-		Listing     *listing.Entity `json:"entity"`
-		User        UserDetailEvent `json:"user"`
+		ListingUUID  string          `json:"listingUUID"`
+		BusinessUUID string          `json:"business_uuid"`
+		BusinessName string          `json:"business_name"`
+		Listing      *listing.Entity `json:"entity"`
+		User         UserDetailEvent `json:"user"`
 	}
 	ListingValidationFailedEvent struct {
-		ListingUUID string                     `json:"listingUUID"`
-		Listing     *listing.Entity            `json:"entity"`
-		Errors      []*listing.ValidationError `json:"errors"`
-		User        UserDetailEvent            `json:"user"`
+		ListingUUID  string                     `json:"listingUUID"`
+		BusinessUUID string                     `json:"business_uuid"`
+		BusinessName string                     `json:"business_name"`
+		Listing      *listing.Entity            `json:"entity"`
+		Errors       []*listing.ValidationError `json:"errors"`
+		User         UserDetailEvent            `json:"user"`
 	}
 	UserDetailEvent struct {
 		UUID string `json:"uuid"`
@@ -104,11 +106,9 @@ func (e *categoryEvents) UpdateOrder(event OrderUpdatedEvent) {
 }
 
 func (e *categoryEvents) ListingValidationSuccess(event ListingValidationSuccessEvent) {
-	fmt.Println(fmt.Sprintf("ListingValidationSuccessEvent event fired to %s", e.topics.Category.ListingValidationSuccess))
 	_ = e.publisher.Publish(e.topics.Category.ListingValidationSuccess, &event)
 }
 
 func (e *categoryEvents) ListingValidationFailed(event ListingValidationFailedEvent) {
-	fmt.Println(fmt.Sprintf("ListingValidationFailedEvent event fired to %s", e.topics.Category.ListingValidationFailed))
 	_ = e.publisher.Publish(e.topics.Category.ListingValidationFailed, &event)
 }
