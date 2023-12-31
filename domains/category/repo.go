@@ -191,8 +191,12 @@ func (r *repo) AdminFindChildByUUID(ctx context.Context, categoryUUID string) ([
 }
 
 func (r *repo) AdminFindChildBySlug(ctx context.Context, i18n I18nDetail) ([]*Entity, *i18np.Error) {
+	details, err := r.FindBySlug(ctx, i18n)
+	if err != nil {
+		return nil, err
+	}
 	filter := bson.M{
-		metaField(i18n.Locale, metaFields.Slug): i18n.Slug,
+		fields.MainUUID: details.UUID,
 	}
 	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
 }
