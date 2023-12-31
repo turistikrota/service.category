@@ -90,11 +90,11 @@ func (h srv) CategoryAdminView(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryView(ctx *fiber.Ctx) error {
-	query := query.CategoryFindByUUIDQuery{}
+	query := query.CategoryFindBySlugQuery{}
 	h.parseParams(ctx, &query)
 	l, _ := i18n.GetLanguagesInContext(h.i18n, ctx)
 	query.Locale = l
-	res, err := h.app.Queries.CategoryFindByUUID(ctx.UserContext(), query)
+	res, err := h.app.Queries.CategoryFindBySlug(ctx.UserContext(), query)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}

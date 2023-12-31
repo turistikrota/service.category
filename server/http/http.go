@@ -78,7 +78,7 @@ func (h srv) Listen() error {
 			admin.Delete("/:uuid", h.adminRoute(config.Roles.Category.Delete), h.wrapWithTimeout(h.CategoryDelete))
 			router.Get("/", h.wrapWithTimeout(h.CategoryList))
 			router.Get("/fields", h.wrapWithTimeout(h.CategoryFindFields))
-			router.Get("/:uuid", h.wrapWithTimeout(h.CategoryView))
+			router.Get("/:slug", h.wrapWithTimeout(h.CategoryView))
 			router.Get("/:uuid/child", h.wrapWithTimeout(h.CategoryListChild))
 			return router
 		},
