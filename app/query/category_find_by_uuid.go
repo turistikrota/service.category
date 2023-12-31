@@ -16,9 +16,14 @@ type CategoryFindByUUIDQuery struct {
 	UUID   string `json:"uuid" param:"uuid" validate:"required,object_id"`
 }
 
+type CategoryFindByUUIDMarkdownResult struct {
+	TR string `json:"tr"`
+	EN string `json:"en"`
+}
+
 type CategoryFindByUUIDResult struct {
 	*category.DetailDto
-	MarkdownURL string `json:"markdownURL"`
+	Markdown *CategoryFindByUUIDMarkdownResult `json:"md"`
 }
 
 type CategoryFindByUUIDHandler cqrs.HandlerFunc[CategoryFindByUUIDQuery, *CategoryFindByUUIDResult]
@@ -43,8 +48,11 @@ func NewCategoryFindByUUIDHandler(repo category.Repository, cacheSrv cache.Servi
 			return nil, err
 		}
 		return &CategoryFindByUUIDResult{
-			DetailDto:   res,
-			MarkdownURL: dressCdnMarkdown(cnf, res.UUID, query.Locale),
+			DetailDto: res,
+			Markdown: &CategoryFindByUUIDMarkdownResult{
+				TR: dressCdnMarkdown(cnf, res.UUID, category.LocaleTR.String()),
+				EN: dressCdnMarkdown(cnf, res.UUID, category.LocaleEN.String()),
+			},
 		}, nil
 	}
 }
