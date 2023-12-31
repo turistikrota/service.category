@@ -23,7 +23,7 @@ type Commands struct {
 type Queries struct {
 	CategoryFindFields       query.CategoryFindFieldsHandler
 	CategoryFind             query.CategoryFindHandler
-	CategoryFindBySlug       query.CategoryFindBySlugHandler
+	CategoryFindByUUID       query.CategoryFindByUUIDHandler
 	CategoryFindChild        query.CategoryFindChildHandler
 	CategoryFindAll          query.CategoryFindAllHandler
 	CategoryAdminFindChild   query.CategoryAdminFindChildHandler

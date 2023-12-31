@@ -11,41 +11,38 @@ import (
 	"github.com/turistikrota/service.category/domains/category"
 )
 
-type CategoryFindBySlugQuery struct {
+type CategoryFindByUUIDQuery struct {
 	Locale string `json:"-"`
-	Slug   string `json:"slug" param:"slug" validate:"required,slug"`
+	UUID   string `json:"uuid" param:"uuid" validate:"required,object_id"`
 }
 
-type CategoryFindBySlugResult struct {
+type CategoryFindByUUIDResult struct {
 	*category.DetailDto
 	MarkdownURL string `json:"markdownURL"`
 }
 
-type CategoryFindBySlugHandler cqrs.HandlerFunc[CategoryFindBySlugQuery, *CategoryFindBySlugResult]
+type CategoryFindByUUIDHandler cqrs.HandlerFunc[CategoryFindByUUIDQuery, *CategoryFindByUUIDResult]
 
-func NewCategoryFindBySlugHandler(repo category.Repository, cacheSrv cache.Service, cnf config.App) CategoryFindBySlugHandler {
+func NewCategoryFindByUUIDHandler(repo category.Repository, cacheSrv cache.Service, cnf config.App) CategoryFindByUUIDHandler {
 	cache := cache.New[*category.DetailDto](cacheSrv)
 
 	createCacheEntity := func() *category.DetailDto {
 		return &category.DetailDto{}
 	}
 
-	return func(ctx context.Context, query CategoryFindBySlugQuery) (*CategoryFindBySlugResult, *i18np.Error) {
+	return func(ctx context.Context, query CategoryFindByUUIDQuery) (*CategoryFindByUUIDResult, *i18np.Error) {
 		cacheHandler := func() (*category.DetailDto, *i18np.Error) {
-			res, err := repo.FindBySlug(ctx, category.I18nDetail{
-				Locale: query.Locale,
-				Slug:   query.Slug,
-			})
+			res, err := repo.Find(ctx, query.UUID)
 			if err != nil {
 				return nil, err
 			}
 			return res.ToDetail(), nil
 		}
-		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_%v_%v", query.Locale, query.Slug))
+		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_%v", query.UUID))
 		if err != nil {
 			return nil, err
 		}
-		return &CategoryFindBySlugResult{
+		return &CategoryFindByUUIDResult{
 			DetailDto:   res,
 			MarkdownURL: dressCdnMarkdown(cnf, res.UUID, query.Locale),
 		}, nil

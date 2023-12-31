@@ -42,7 +42,7 @@ func NewApplication(cnf Config) app.Application {
 		Queries: app.Queries{
 			CategoryFindFields:       query.NewCategoryFindFieldsHandler(categoryRepo, cnf.CacheSrv),
 			CategoryFind:             query.NewCategoryFindHandler(categoryRepo, cnf.CacheSrv, cnf.App),
-			CategoryFindBySlug:       query.NewCategoryFindBySlugHandler(categoryRepo, cnf.CacheSrv, cnf.App),
+			CategoryFindByUUID:       query.NewCategoryFindByUUIDHandler(categoryRepo, cnf.CacheSrv, cnf.App),
 			CategoryFindChild:        query.NewCategoryFindChildHandler(categoryRepo, cnf.CacheSrv),
 			CategoryFindAll:          query.NewCategoryFindAllHandler(categoryRepo, cnf.CacheSrv),
 			CategoryAdminFindChild:   query.NewCategoryAdminFindChildHandler(categoryRepo, cnf.CacheSrv),
