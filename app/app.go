@@ -21,12 +21,15 @@ type Commands struct {
 }
 
 type Queries struct {
-	CategoryFindFields       query.CategoryFindFieldsHandler
-	CategoryFind             query.CategoryFindHandler
-	CategoryFindBySlug       query.CategoryFindBySlugHandler
-	CategoryFindChild        query.CategoryFindChildHandler
-	CategoryFindAll          query.CategoryFindAllHandler
-	CategoryAdminFindChild   query.CategoryAdminFindChildHandler
-	CategoryAdminFindAll     query.CategoryAdminFindAllHandler
-	CategoryAdminFindParents query.CategoryAdminFindParentsHandler
+	CategoryFindFieldsByUUIDs query.CategoryFindFieldsByUUIDsHandler
+	CategoryFindFieldsBySlugs query.CategoryFindFieldsBySlugsHandler
+	CategoryFind              query.CategoryFindHandler
+	CategoryFindBySlug        query.CategoryFindBySlugHandler
+	CategoryFindChildByUUID   query.CategoryFindChildByUUIDHandler
+	CategoryFindChildBySlug   query.CategoryFindChildBySlugHandler
+	CategoryFindAllByUUIDs    query.CategoryFindAllByUUIDsHandler
+	CategoryFindAllBySlugs    query.CategoryFindAllBySlugHandler
+	CategoryAdminFindChild    query.CategoryAdminFindChildHandler
+	CategoryAdminFindAll      query.CategoryAdminFindAllHandler
+	CategoryAdminFindParents  query.CategoryAdminFindParentsHandler
 }

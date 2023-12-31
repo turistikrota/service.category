@@ -10,27 +10,27 @@ import (
 	"github.com/turistikrota/service.category/domains/category"
 )
 
-type CategoryFindFieldsQuery struct {
+type CategoryFindFieldsByUUIDsQuery struct {
 	UUIDs []string `json:"uuids" param:"uuids" query:"uuids" validate:"required,min=1,max=10,dive,object_id"`
 }
 
-type CategoryFindFieldsResult struct {
+type CategoryFindFieldsByUUIDsResult struct {
 	Alerts      []*category.AlertDto      `json:"alerts"`
 	Rules       []*category.RuleDto       `json:"rules"`
 	InputGroups []*category.InputGroupDto `json:"inputGroups"`
 }
 
-type CategoryFindFieldsHandler cqrs.HandlerFunc[CategoryFindFieldsQuery, *CategoryFindFieldsResult]
+type CategoryFindFieldsByUUIDsHandler cqrs.HandlerFunc[CategoryFindFieldsByUUIDsQuery, *CategoryFindFieldsByUUIDsResult]
 
-func NewCategoryFindFieldsHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindFieldsHandler {
-	c := cache.New[*CategoryFindFieldsResult](cacheSrv)
+func NewCategoryFindFieldsByUUIDsHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindFieldsByUUIDsHandler {
+	c := cache.New[*CategoryFindFieldsByUUIDsResult](cacheSrv)
 
-	createCacheEntity := func() *CategoryFindFieldsResult {
-		return &CategoryFindFieldsResult{}
+	createCacheEntity := func() *CategoryFindFieldsByUUIDsResult {
+		return &CategoryFindFieldsByUUIDsResult{}
 	}
 
-	return func(ctx context.Context, query CategoryFindFieldsQuery) (*CategoryFindFieldsResult, *i18np.Error) {
-		cacheHandler := func() (*CategoryFindFieldsResult, *i18np.Error) {
+	return func(ctx context.Context, query CategoryFindFieldsByUUIDsQuery) (*CategoryFindFieldsByUUIDsResult, *i18np.Error) {
+		cacheHandler := func() (*CategoryFindFieldsByUUIDsResult, *i18np.Error) {
 			res, err := repo.FindFieldsByUUIDs(ctx, query.UUIDs)
 			if err != nil {
 				return nil, err
@@ -43,12 +43,12 @@ func NewCategoryFindFieldsHandler(repo category.Repository, cacheSrv cache.Servi
 				alerts = append(alerts, v.ToAlert()...)
 				rules = append(rules, v.ToRule()...)
 			}
-			return &CategoryFindFieldsResult{
+			return &CategoryFindFieldsByUUIDsResult{
 				InputGroups: inputGroups,
 				Alerts:      alerts,
 				Rules:       rules,
 			}, nil
 		}
-		return c.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_fields_%v", query.UUIDs))
+		return c.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_fields_by_uuids_%v", query.UUIDs))
 	}
 }
