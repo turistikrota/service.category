@@ -77,15 +77,10 @@ func (h srv) Listen() error {
 			admin.Get("/:uuid", h.adminRoute(config.Roles.Category.ViewAdmin), h.wrapWithTimeout(h.CategoryAdminView))
 			admin.Delete("/:uuid", h.adminRoute(config.Roles.Category.Delete), h.wrapWithTimeout(h.CategoryDelete))
 
-			bySlug := router.Group("/by-slug")
-			bySlug.Get("/", h.wrapWithTimeout(h.CategoryListBySlugs))
-			bySlug.Get("/fields", h.wrapWithTimeout(h.CategoryFindFieldsBySlugs))
-			bySlug.Get("/:slug/child", h.wrapWithTimeout(h.CategoryListChildBySlug))
-
-			router.Get("/", h.wrapWithTimeout(h.CategoryListByUUIDs))
-			router.Get("/fields", h.wrapWithTimeout(h.CategoryFindFieldsByUUIDs))
-			router.Get("/:slug", h.wrapWithTimeout(h.CategoryView))
-			router.Get("/:uuid/child", h.wrapWithTimeout(h.CategoryListChildByUUID))
+			router.Get("/", h.wrapWithTimeout(h.CategoryList))
+			router.Get("/fields", h.wrapWithTimeout(h.CategoryFindFields))
+			router.Get("/:uuid", h.wrapWithTimeout(h.CategoryView))
+			router.Get("/:uuid/child", h.wrapWithTimeout(h.CategoryListChild))
 			return router
 		},
 	})

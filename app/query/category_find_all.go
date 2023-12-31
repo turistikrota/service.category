@@ -10,26 +10,26 @@ import (
 	"github.com/turistikrota/service.category/domains/category"
 )
 
-type CategoryFindAllByUUIDsQuery struct {
+type CategoryFindAllQuery struct {
 	UUIDs []string `json:"uuids" param:"uuids" query:"uuids" validate:"omitempty,min=1,max=10,dive,object_id"`
 }
 
-type CategoryFindAllByUUIDsResult struct {
+type CategoryFindAllResult struct {
 	List []*category.ListDto `json:"list"`
 }
 
-type CategoryFindAllByUUIDsHandler cqrs.HandlerFunc[CategoryFindAllByUUIDsQuery, *CategoryFindAllByUUIDsResult]
+type CategoryFindAllHandler cqrs.HandlerFunc[CategoryFindAllQuery, *CategoryFindAllResult]
 
-func NewCategoryFindAllByUUIDsHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindAllByUUIDsHandler {
+func NewCategoryFindAllHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindAllHandler {
 	c := cache.New[[]*category.ListDto](cacheSrv)
 
 	createCacheEntity := func() []*category.ListDto {
 		return []*category.ListDto{}
 	}
 
-	return func(ctx context.Context, query CategoryFindAllByUUIDsQuery) (*CategoryFindAllByUUIDsResult, *i18np.Error) {
+	return func(ctx context.Context, query CategoryFindAllQuery) (*CategoryFindAllResult, *i18np.Error) {
 		cacheHandler := func() ([]*category.ListDto, *i18np.Error) {
-			res, err := repo.FindAllByUUIDs(ctx, query.UUIDs)
+			res, err := repo.FindAll(ctx, query.UUIDs)
 			if err != nil {
 				return nil, err
 			}
@@ -39,11 +39,11 @@ func NewCategoryFindAllByUUIDsHandler(repo category.Repository, cacheSrv cache.S
 			}
 			return list, nil
 		}
-		res, err := c.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_all_by_uuids_%v", query.UUIDs))
+		res, err := c.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_all_%v", query.UUIDs))
 		if err != nil {
 			return nil, err
 		}
-		return &CategoryFindAllByUUIDsResult{
+		return &CategoryFindAllResult{
 			List: res,
 		}, nil
 	}

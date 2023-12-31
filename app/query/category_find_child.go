@@ -10,26 +10,26 @@ import (
 	"github.com/turistikrota/service.category/domains/category"
 )
 
-type CategoryFindChildByUUIDQuery struct {
+type CategoryFindChildQuery struct {
 	UUID string `json:"uuid" params:"uuid" validate:"required,object_id"`
 }
 
-type CategoryFindChildByUUIDResult struct {
+type CategoryFindChildResult struct {
 	List []*category.ListDto `json:"list"`
 }
 
-type CategoryFindChildByUUIDHandler cqrs.HandlerFunc[CategoryFindChildByUUIDQuery, *CategoryFindChildByUUIDResult]
+type CategoryFindChildHandler cqrs.HandlerFunc[CategoryFindChildQuery, *CategoryFindChildResult]
 
-func NewCategoryFindChildByUUIDHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindChildByUUIDHandler {
+func NewCategoryFindChildHandler(repo category.Repository, cacheSrv cache.Service) CategoryFindChildHandler {
 	cache := cache.New[[]*category.ListDto](cacheSrv)
 
 	createCacheEntity := func() []*category.ListDto {
 		return []*category.ListDto{}
 	}
 
-	return func(ctx context.Context, query CategoryFindChildByUUIDQuery) (*CategoryFindChildByUUIDResult, *i18np.Error) {
+	return func(ctx context.Context, query CategoryFindChildQuery) (*CategoryFindChildResult, *i18np.Error) {
 		cacheHandler := func() ([]*category.ListDto, *i18np.Error) {
-			res, err := repo.AdminFindChildByUUID(ctx, query.UUID)
+			res, err := repo.AdminFindChild(ctx, query.UUID)
 			if err != nil {
 				return nil, err
 			}
@@ -39,11 +39,11 @@ func NewCategoryFindChildByUUIDHandler(repo category.Repository, cacheSrv cache.
 			}
 			return list, nil
 		}
-		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_child_by_uuid_%v", query.UUID))
+		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_child_%v", query.UUID))
 		if err != nil {
 			return nil, err
 		}
-		return &CategoryFindChildByUUIDResult{
+		return &CategoryFindChildResult{
 			List: res,
 		}, nil
 	}

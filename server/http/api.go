@@ -90,21 +90,21 @@ func (h srv) CategoryAdminView(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryView(ctx *fiber.Ctx) error {
-	query := query.CategoryFindBySlugQuery{}
+	query := query.CategoryFindByUUIDQuery{}
 	h.parseParams(ctx, &query)
 	l, _ := i18n.GetLanguagesInContext(h.i18n, ctx)
 	query.Locale = l
-	res, err := h.app.Queries.CategoryFindBySlug(ctx.UserContext(), query)
+	res, err := h.app.Queries.CategoryFindByUUID(ctx.UserContext(), query)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}
 	return result.SuccessDetail(Messages.Success.CategoryView, res)
 }
 
-func (h srv) CategoryFindFieldsByUUIDs(ctx *fiber.Ctx) error {
+func (h srv) CategoryFindFields(ctx *fiber.Ctx) error {
 	q := query.CategoryFindFieldsByUUIDsQuery{}
 	h.parseQuery(ctx, &q)
-	res, err := h.app.Queries.CategoryFindFieldsByUUIDs(ctx.UserContext(), q)
+	res, err := h.app.Queries.CategoryFindFields(ctx.UserContext(), q)
 	if err != nil {
 		l, a := i18n.GetLanguagesInContext(h.i18n, ctx)
 		return result.Error(h.i18n.TranslateFromError(*err, l, a))
@@ -112,57 +112,20 @@ func (h srv) CategoryFindFieldsByUUIDs(ctx *fiber.Ctx) error {
 	return result.SuccessDetail(Messages.Success.CategoryView, res)
 }
 
-func (h srv) CategoryFindFieldsBySlugs(ctx *fiber.Ctx) error {
-	q := query.CategoryFindFieldsBySlugsQuery{}
+func (h srv) CategoryList(ctx *fiber.Ctx) error {
+	q := query.CategoryFindAllQuery{}
 	h.parseQuery(ctx, &q)
-	l, _ := i18n.GetLanguagesInContext(h.i18n, ctx)
-	q.Locale = l
-	res, err := h.app.Queries.CategoryFindFieldsBySlugs(ctx.UserContext(), q)
-	if err != nil {
-		l, a := i18n.GetLanguagesInContext(h.i18n, ctx)
-		return result.Error(h.i18n.TranslateFromError(*err, l, a))
-	}
-	return result.SuccessDetail(Messages.Success.CategoryView, res)
-}
-
-func (h srv) CategoryListByUUIDs(ctx *fiber.Ctx) error {
-	q := query.CategoryFindAllByUUIDsQuery{}
-	h.parseQuery(ctx, &q)
-	res, err := h.app.Queries.CategoryFindAllByUUIDs(ctx.UserContext(), q)
+	res, err := h.app.Queries.CategoryFindAll(ctx.UserContext(), q)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}
 	return result.SuccessDetail(Messages.Success.CategoryList, res.List)
 }
 
-func (h srv) CategoryListBySlugs(ctx *fiber.Ctx) error {
-	q := query.CategoryFindAllBySlugQuery{}
-	h.parseQuery(ctx, &q)
-	l, _ := i18n.GetLanguagesInContext(h.i18n, ctx)
-	q.Locale = l
-	res, err := h.app.Queries.CategoryFindAllBySlugs(ctx.UserContext(), q)
-	if err != nil {
-		return result.Error(h.i18n.TranslateFromError(*err))
-	}
-	return result.SuccessDetail(Messages.Success.CategoryList, res.List)
-}
-
-func (h srv) CategoryListChildByUUID(ctx *fiber.Ctx) error {
-	query := query.CategoryFindChildByUUIDQuery{}
+func (h srv) CategoryListChild(ctx *fiber.Ctx) error {
+	query := query.CategoryFindChildQuery{}
 	h.parseParams(ctx, &query)
-	res, err := h.app.Queries.CategoryFindChildByUUID(ctx.UserContext(), query)
-	if err != nil {
-		return result.Error(h.i18n.TranslateFromError(*err))
-	}
-	return result.SuccessDetail(Messages.Success.CategoryListChild, res.List)
-}
-
-func (h srv) CategoryListChildBySlug(ctx *fiber.Ctx) error {
-	query := query.CategoryFindChildBySlugQuery{}
-	h.parseParams(ctx, &query)
-	l, _ := i18n.GetLanguagesInContext(h.i18n, ctx)
-	query.Locale = l
-	res, err := h.app.Queries.CategoryFindChildBySlug(ctx.UserContext(), query)
+	res, err := h.app.Queries.CategoryFindChild(ctx.UserContext(), query)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}
@@ -180,9 +143,9 @@ func (h srv) CategoryAdminList(ctx *fiber.Ctx) error {
 }
 
 func (h srv) CategoryAdminListChild(ctx *fiber.Ctx) error {
-	query := query.CategoryAdminFindChildQuery{}
+	query := query.CategoryFindChildQuery{}
 	h.parseParams(ctx, &query)
-	res, err := h.app.Queries.CategoryAdminFindChild(ctx.UserContext(), query)
+	res, err := h.app.Queries.CategoryFindChild(ctx.UserContext(), query)
 	if err != nil {
 		return result.Error(h.i18n.TranslateFromError(*err))
 	}

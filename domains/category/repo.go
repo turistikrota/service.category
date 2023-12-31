@@ -25,16 +25,12 @@ type Repository interface {
 	Enable(ctx context.Context, categoryUUID string) *i18np.Error
 	FindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	Find(ctx context.Context, categoryUUID string) (*Entity, *i18np.Error)
-	FindAllByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
-	FindAllBySlugs(ctx context.Context, locale string, slugs []string) ([]*Entity, *i18np.Error)
+	FindAll(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
 	AdminFindAll(ctx context.Context, onlyMains bool) ([]*Entity, *i18np.Error)
-	AdminFindChildByUUID(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
-	AdminFindChildBySlug(ctx context.Context, i18n I18nDetail) ([]*Entity, *i18np.Error)
+	AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error)
 	UpdateOrder(ctx context.Context, categoryUUID string, order int16) *i18np.Error
 	FindBySlug(ctx context.Context, i18n I18nDetail) (*Entity, *i18np.Error)
-	FindFieldsBySlugs(ctx context.Context, locale string, slugs []string) ([]*Entity, *i18np.Error)
 	FindFieldsByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
-	FindBySlugs(ctx context.Context, locale string, slugs []string) ([]*Entity, *i18np.Error)
 	FindByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error)
 }
 
@@ -183,20 +179,9 @@ func (r *repo) FindChild(ctx context.Context, categoryUUID string) ([]*Entity, *
 	return r.helper.GetListFilter(ctx, filter, r.listOptions())
 }
 
-func (r *repo) AdminFindChildByUUID(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error) {
+func (r *repo) AdminFindChild(ctx context.Context, categoryUUID string) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
 		fields.MainUUID: categoryUUID,
-	}
-	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
-}
-
-func (r *repo) AdminFindChildBySlug(ctx context.Context, i18n I18nDetail) ([]*Entity, *i18np.Error) {
-	details, err := r.FindBySlug(ctx, i18n)
-	if err != nil {
-		return nil, err
-	}
-	filter := bson.M{
-		fields.MainUUID: details.UUID,
 	}
 	return r.helper.GetListFilter(ctx, filter, r.adminListOptions())
 }
@@ -254,20 +239,7 @@ func (r *repo) FindFieldsByUUIDs(ctx context.Context, categoryUUIDs []string) ([
 	return r.helper.GetListFilter(ctx, filter, r.fieldOptions())
 }
 
-func (r *repo) FindFieldsBySlugs(ctx context.Context, locale string, slugs []string) ([]*Entity, *i18np.Error) {
-	filter := bson.M{
-		metaField(locale, metaFields.Slug): bson.M{
-			"$in": slugs,
-		},
-		fields.IsActive: true,
-		fields.IsDeleted: bson.M{
-			"$ne": true,
-		},
-	}
-	return r.helper.GetListFilter(ctx, filter, r.fieldOptions())
-}
-
-func (r *repo) FindAllByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error) {
+func (r *repo) FindAll(ctx context.Context, categoryUUIDs []string) ([]*Entity, *i18np.Error) {
 	filter := bson.M{
 		fields.MainUUIDs: bson.M{
 			"$size": 0,
@@ -284,24 +256,6 @@ func (r *repo) FindAllByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*E
 		}
 		filter[fields.UUID] = bson.M{
 			"$in": ids,
-		}
-	}
-	return r.helper.GetListFilter(ctx, filter, r.listOptions())
-}
-
-func (r *repo) FindAllBySlugs(ctx context.Context, locale string, slugs []string) ([]*Entity, *i18np.Error) {
-	filter := bson.M{
-		fields.MainUUIDs: bson.M{
-			"$size": 0,
-		},
-		fields.IsDeleted: bson.M{
-			"$ne": true,
-		},
-		fields.IsActive: true,
-	}
-	if len(slugs) > 0 {
-		filter[metaField(locale, metaFields.Slug)] = bson.M{
-			"$in": slugs,
 		}
 	}
 	return r.helper.GetListFilter(ctx, filter, r.listOptions())
@@ -325,19 +279,6 @@ func (r *repo) FindByUUIDs(ctx context.Context, categoryUUIDs []string) ([]*Enti
 	filter := bson.M{
 		fields.UUID: bson.M{
 			"$in": ids,
-		},
-		fields.IsActive: true,
-		fields.IsDeleted: bson.M{
-			"$ne": true,
-		},
-	}
-	return r.helper.GetListFilter(ctx, filter, r.listOptions())
-}
-
-func (r *repo) FindBySlugs(ctx context.Context, locale string, slugs []string) ([]*Entity, *i18np.Error) {
-	filter := bson.M{
-		metaField(locale, metaFields.Slug): bson.M{
-			"$in": slugs,
 		},
 		fields.IsActive: true,
 		fields.IsDeleted: bson.M{
