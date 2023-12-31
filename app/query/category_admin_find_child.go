@@ -29,7 +29,7 @@ func NewCategoryAdminFindChildHandler(repo category.Repository, cacheSrv cache.S
 
 	return func(ctx context.Context, query CategoryAdminFindChildQuery) (*CategoryAdminFindChildResult, *i18np.Error) {
 		cacheHandler := func() ([]*category.AdminListDto, *i18np.Error) {
-			res, err := repo.AdminFindChildByUUID(ctx, query.UUID)
+			res, err := repo.AdminFindChild(ctx, query.UUID)
 			if err != nil {
 				return nil, err
 			}
