@@ -18,76 +18,79 @@ type UserDetail struct {
 }
 
 type Entity struct {
-	UUID          string          `json:"uuid"`
-	Business      Business        `json:"business"`
-	Images        []Image         `json:"images"`
-	Meta          map[Locale]Meta `json:"meta"`
-	CategoryUUIDs []string        `json:"categoryUUIDs"`
-	Features      []Feature       `json:"features"`
-	Prices        []Price         `json:"prices"`
-	Location      Location        `json:"location"`
-	Boosts        []Boost         `json:"boosts"`
-	Validation    Validation      `json:"validation"`
-	Type          Type            `json:"type"`
-	Order         int             `json:"order"`
-	IsActive      bool            `json:"isActive"`
-	IsDeleted     bool            `json:"isDeleted"`
-	IsValid       bool            `json:"isValid"`
-	CreatedAt     time.Time       `json:"createdAt"`
-	UpdatedAt     time.Time       `json:"updatedAt"`
+	UUID          string          `json:"uuid" bson:"_id,omitempty"`
+	Business      Business        `json:"business" bson:"business" validate:"required,dive,required"`
+	Images        []Image         `json:"images" bson:"images" validate:"required,min=1,max=30,dive,required"`
+	Meta          map[Locale]Meta `json:"meta" bson:"meta" validate:"required,dive,required"`
+	CategoryUUIDs []string        `json:"categoryUUIDs" bson:"categoryUUIDs" validate:"required,min=1,max=30,dive,required"`
+	Features      []Feature       `json:"features" bson:"features" validate:"required,min=1,max=30,dive,required"`
+	Prices        []Price         `json:"prices" bson:"prices" validate:"required,min=1,max=100,dive,required"`
+	Location      Location        `json:"location" bson:"location" validate:"required,dive,required"`
+	Boosts        []Boost         `json:"boosts" bson:"boosts" validate:"required,min=0,max=30,dive,required"`
+	Validation    *Validation     `json:"validation" bson:"validation" validate:"required,dive,required"`
+	Currency      Currency        `json:"currency" bson:"currency" validate:"required,oneof=TRY USD EUR"`
+	Order         *int            `json:"order" bson:"order" validate:"required,min=0,max=1000"`
+	IsActive      bool            `json:"isActive" bson:"is_active"`
+	IsDeleted     bool            `json:"isDeleted" bson:"is_deleted"`
+	IsValid       bool            `json:"isValid" bson:"is_valid"`
+	CreatedAt     time.Time       `json:"createdAt" bson:"created_at"`
+	UpdatedAt     time.Time       `json:"updatedAt" bson:"updated_at"`
 }
+
 type Business struct {
 	UUID     string `json:"uuid"`
 	NickName string `json:"nickName"`
 }
 
 type Image struct {
-	Url   string `json:"url"`
-	Order int16  `json:"order"`
-}
-
-type Validation struct {
-	MinAdult   *int  `json:"minAdult" bson:"min_adult" validate:"required,min=1,max=50,ltefield=MaxAdult"`
-	MaxAdult   *int  `json:"maxAdult" bson:"max_adult" validate:"required,min=0,max=50,gtefield=MinAdult"`
-	MinKid     *int  `json:"minKid" bson:"min_kid" validate:"required,min=0,max=50,ltefield=MaxKid"`
-	MaxKid     *int  `json:"maxKid" bson:"max_kid" validate:"required,min=0,max=50,gtefield=MinKid"`
-	MinBaby    *int  `json:"minBaby" bson:"min_baby" validate:"required,min=0,max=50,ltefield=MaxBaby"`
-	MaxBaby    *int  `json:"maxBaby" bson:"max_baby" validate:"required,min=0,max=50,gtefield=MinBaby"`
-	MinDate    *int  `json:"minDate" bson:"min_date" validate:"required,min=0,max=50,ltefield=MaxDate"`
-	MaxDate    *int  `json:"maxDate" bson:"max_date" validate:"required,min=0,max=50,gtefield=MinDate"`
-	OnlyFamily *bool `json:"onlyFamily" bson:"only_family" validate:"required"`
-	NoPet      *bool `json:"noPet" bson:"no_pet" validate:"required"`
-	NoSmoke    *bool `json:"noSmoke" bson:"no_smoke" validate:"required"`
-	NoAlcohol  *bool `json:"noAlcohol" bson:"no_alcohol" validate:"required"`
+	Url   string `json:"url" bson:"url" validate:"required,url"`
+	Order *int16 `json:"order" bson:"order" validate:"required,min=0,max=20"`
 }
 
 type Meta struct {
-	Locale      string `json:"locale"`
-	Description string `json:"description"`
-	Title       string `json:"title"`
+	Description string `json:"description"  validate:"required,max=255,min=3"`
+	Title       string `json:"title" validate:"required,max=255,min=3"`
 	Slug        string `json:"slug"`
-	MarkdownURL string `json:"markdownURL"`
 }
 
 type Feature struct {
-	CategoryInputUUID string      `json:"categoryInputUUID"`
-	Value             interface{} `json:"value"`
-	IsPayed           bool        `json:"isPayed"`
+	CategoryInputUUID string      `json:"categoryInputUUID" bson:"category_input_uuid" validate:"required,uuid"`
+	Value             interface{} `json:"value" bson:"value" validate:"required"`
+	IsPayed           *bool       `json:"isPayed" bson:"is_payed" validate:"required"`
+	Price             float64     `json:"price" bson:"price" validate:"omitempty,gt=0"`
 }
 
 type Price struct {
-	StartDate time.Time `json:"startDate"`
-	EndDate   time.Time `json:"endDate"`
-	Price     float64   `json:"price"`
+	StartDate time.Time `json:"startDate" bson:"start_date"`
+	EndDate   time.Time `json:"endDate" bson:"end_date"`
+	Price     float64   `json:"price" bson:"price"`
 }
 
 type Location struct {
-	Country     string    `json:"country"`
-	City        string    `json:"city"`
-	Street      string    `json:"street"`
-	Address     string    `json:"address"`
-	IsStrict    bool      `json:"isStrict"`
-	Coordinates []float64 `json:"coordinates"`
+	Country     string    `json:"country" validate:"required,max=255,min=3"`
+	City        string    `json:"city" validate:"required,max=255,min=3"`
+	Street      string    `json:"street" validate:"required,max=255,min=3"`
+	Address     string    `json:"address" validate:"required,max=255,min=3"`
+	IsStrict    *bool     `json:"isStrict" bson:"is_strict" validate:"required"`
+	Coordinates []float64 `json:"coordinates" bson:"coordinates" validate:"required,min=2,max=2,dive,required,min=-180,max=180"`
+}
+
+type Validation struct {
+	MinAdult    *int  `json:"minAdult" bson:"min_adult" validate:"required,min=1,max=50,ltefield=MaxAdult"`
+	MaxAdult    *int  `json:"maxAdult" bson:"max_adult" validate:"required,min=0,max=50,gtefield=MinAdult"`
+	MinKid      *int  `json:"minKid" bson:"min_kid" validate:"required,min=0,max=50,ltefield=MaxKid"`
+	MaxKid      *int  `json:"maxKid" bson:"max_kid" validate:"required,min=0,max=50,gtefield=MinKid"`
+	MinBaby     *int  `json:"minBaby" bson:"min_baby" validate:"required,min=0,max=50,ltefield=MaxBaby"`
+	MaxBaby     *int  `json:"maxBaby" bson:"max_baby" validate:"required,min=0,max=50,gtefield=MinBaby"`
+	MinDate     *int  `json:"minDate" bson:"min_date" validate:"required,min=0,max=50,ltefield=MaxDate"`
+	MaxDate     *int  `json:"maxDate" bson:"max_date" validate:"required,min=0,max=50,gtefield=MinDate"`
+	OnlyFamily  *bool `json:"onlyFamily" bson:"only_family" validate:"required"`
+	NoPet       *bool `json:"noPet" bson:"no_pet" validate:"required"`
+	NoSmoke     *bool `json:"noSmoke" bson:"no_smoke" validate:"required"`
+	NoAlcohol   *bool `json:"noAlcohol" bson:"no_alcohol" validate:"required"`
+	NoParty     *bool `json:"noParty" bson:"no_party" validate:"required"`
+	NoUnmarried *bool `json:"noUnmarried" bson:"no_unmarried" validate:"required"`
+	NoGuest     *bool `json:"noGuest" bson:"no_guest" validate:"required"`
 }
 
 type Boost struct {
@@ -96,7 +99,13 @@ type Boost struct {
 	EndDate   time.Time `json:"endDate"`
 }
 
-type Type string
+type Currency string
+
+const (
+	CurrencyTRY Currency = "TRY"
+	CurrencyUSD Currency = "USD"
+	CurrencyEUR Currency = "EUR"
+)
 
 type Locale string
 
@@ -105,16 +114,8 @@ const (
 	LocaleTR Locale = "tr"
 )
 
-const (
-	TypeEstate     Type = "estate"
-	TypeCar        Type = "car"
-	TypeBoat       Type = "boat"
-	TypeMotorcycle Type = "motorcycle"
-	TypeOther      Type = "other"
-)
-
-func (t Type) String() string {
-	return string(t)
+func (l Locale) String() string {
+	return string(l)
 }
 
 func (e Entity) GetFeatureByCategoryInputUUID(uuid string) (Feature, int, bool) {
@@ -124,8 +125,4 @@ func (e Entity) GetFeatureByCategoryInputUUID(uuid string) (Feature, int, bool) 
 		}
 	}
 	return Feature{}, -1, false
-}
-
-func (l Locale) String() string {
-	return string(l)
 }
