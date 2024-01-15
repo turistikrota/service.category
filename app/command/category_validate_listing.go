@@ -48,8 +48,7 @@ func NewCategoryValidateListingHandler(factory category.Factory, repo category.R
 							return failValidation(events, fmt.Sprintf("features[%v]", idx), err, cmd.Listing, cmd.User)
 						}
 					}
-					isPayed := input.IsPayed != nil && *input.IsPayed
-					feature.IsPayed = isPayed
+					feature.IsPayed = input.IsPayed
 				}
 			}
 		}
