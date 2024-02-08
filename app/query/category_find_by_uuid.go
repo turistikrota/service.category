@@ -43,7 +43,7 @@ func NewCategoryFindByUUIDHandler(repo category.Repository, cacheSrv cache.Servi
 			}
 			return res.ToDetail(), nil
 		}
-		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_%v", query.UUID))
+		res, err := cache.Creator(createCacheEntity).Handler(cacheHandler).Get(ctx, fmt.Sprintf("category_find_by_uuid_%v", query.UUID))
 		if err != nil {
 			return nil, err
 		}
